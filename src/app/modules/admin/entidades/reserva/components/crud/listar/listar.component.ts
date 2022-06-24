@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MReserva } from '../../../models/m-reserva';
+import { IReserva } from '../../../interfaces/i-reserva';
 import { ReservaCrudService } from '../../../services/reserva-crud.service';
-//import { ReservaCrudService } from 'src/app/modules/admin/entidades/reserva/services/reserva-crud.service';
 
 @Component({
   selector: 'app-listar',
@@ -12,6 +11,7 @@ import { ReservaCrudService } from '../../../services/reserva-crud.service';
 export class ListarComponent implements OnInit {
 
   resultado: any = [];
+  reservas! : IReserva[];
 
   constructor(public reservaCrudService: ReservaCrudService) { }
 
@@ -21,8 +21,25 @@ export class ListarComponent implements OnInit {
   
   carregarReservas() {
     return this.reservaCrudService.getAllData().subscribe((data: {}) => {
+      //console.log('++++++++++++++++++++++++++++++++++++++++++++++++');
       this.resultado = data;
-      console.log(this.resultado); 
+      //console.log(this.resultado); 
+      //console.log('++++++++++++++++++++++++++++++++++++++++++++++++');
+      //console.log('');
+      //console.log('------------------------------------------------');
+      this.reservas = this.resultado._embedded.reservas;
+      //console.log(this.reservas);
+      //console.log('------------------------------------------------');
+      //console.log('');
+      //console.log('');
+      //console.log('************************************************');
+      //console.log(this.reservas[0].dataReserva);
+      //console.log(this.reservas[1]);
+      //console.log(this.reservas[2]);
+      //console.log(this.reservas[3]);
+      //console.log(this.reservas[4]);
+      //console.log(this.reservas[5]);
+      //console.log('************************************************');
     });
   }
 }
