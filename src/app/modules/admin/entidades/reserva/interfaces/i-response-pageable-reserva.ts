@@ -5,6 +5,9 @@ export interface IResponsePageableReserva {
 
     _embedded: {reservas: IReserva[]};
     _links: {
+        first:{href: String};
+        next: {href: String};
+        last: {href: String};
         self: {href: String};
         profile: {href: String};
         search: {href: String};

@@ -1,16 +1,16 @@
-/*import { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 //import { Observable } from 'rxjs/internal/Observable';
 import { ApiCrudService } from 'src/app/my-core/services/api-crud.service';
 import { MReserva } from '../models/m-reserva';
 import { Observable, throwError } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';*/
+import { catchError, map, take, tap, delay } from 'rxjs/operators';
+//import { Injectable } from '@angular/core';
+//import { HttpClient } from '@angular/common/http';
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-import { ApiCrudService } from '../../../../../my-core/services/api-crud.service';
-import { MReserva } from '../models/m-reserva';
+//import { ApiCrudService } from '../../../../../my-core/services/api-crud.service';
+//import { MReserva } from '../models/m-reserva';
+import { IResponsePageableReserva } from '../interfaces/i-response-pageable-reserva';
 
 
 @Injectable({
@@ -21,5 +21,18 @@ export class ReservaCrudService extends ApiCrudService<MReserva>{
   constructor(protected override  http: HttpClient) {
     super(http, "reservas");
   }
+
+
+  findAll(page: number, size: number, sort: string, ordem: string): Observable<IResponsePageableReserva> {
+
+    //http://localhost:8686/xxxxxx?page=0&size=2&sort=nome,asc
+
+    let url = `${super.getAPIURL}?page=${page}&size=${size}&sort=${sort},${ordem}`;
+    return this.http.get<IResponsePageableReserva>(url, {headers: super.getheaders}).pipe(
+      delay(2000),
+      take(1),
+      catchError(this.errorMgmt));
+  }
+
   
 }

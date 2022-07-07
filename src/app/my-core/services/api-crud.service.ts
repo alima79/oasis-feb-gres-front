@@ -35,8 +35,8 @@ export class ApiCrudService<T> {
 
 
   constructor(protected  http: HttpClient, private URI: String) {
-    this.API_URL = environment.API+URI;
-    console.log("API_URL: "+this.API_URL);
+        this.API_URL = environment.API+URI;
+        //console.log("API_URL: "+this.API_URL);
     }
 
 

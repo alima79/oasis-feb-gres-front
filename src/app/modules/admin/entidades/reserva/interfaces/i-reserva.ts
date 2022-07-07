@@ -10,6 +10,18 @@ export interface IReserva {
     numeroCrianca: string;
     observacoes: string;
 
+    /*Client related*/ 
+    nome: string;
+    apelido: string;
+    tipo: string;
+
+    /*Restaurant related*/
+    nomesRest: string;
+
+    /*Seating related */
+    dataInitSeat: string;
+
+    
     _links: {
         cliente: { href: string ; };
         estado: { href: string ;};
@@ -17,7 +29,6 @@ export interface IReserva {
         pagamento: { href: string ; };
         restauranteSeating: { href: string ;};
         utilizador: { href: string ; };
-    };
-  
+    };  
 
 }
