@@ -11,11 +11,11 @@
 
 
 <div class="search-div">
-    <button mat-raised-button>
+    <button mat-raised-button  (click)="openDialog()">
         <mat-icon>add</mat-icon> Nova Reserva
     </button>
     <mat-form-field class="search-form-field" floatLabel="never">
-        <input matInput [(ngModel)]="searchKey" placeholder="Procurar" autocomplete="off" (keyup)="applyFilter()">
+        <input matInput [(ngModel)]="searchKey" placeholder="Procurar" autocomplete="off" (keyup)="applyFilter(searchKey, 'col1')">
         <button mat-button matSuffix mat-icon-button aria-label="Apagar" *ngIf="searchKey" (click)="onSearchClear()">
             <mat-icon>close</mat-icon>
         </button>
@@ -127,15 +127,15 @@
                     <mat-header-cell *matHeaderCellDef> Ações:<br> &nbsp; Ver &nbsp; | &nbsp; Editar &nbsp; | &nbsp; Apagar </mat-header-cell>
                     <mat-cell *matCellDef="let row"> 
                         
-                        <button mat-icon-button color="primary" aria-label="ver">
+                        <button mat-icon-button color="primary" aria-label="ver" (click)="verDetalhesReserva()">
                             <mat-icon>visibility</mat-icon>
                         </button>
 
-                        <button mat-icon-button color="accent" aria-label="editar">
+                        <button mat-icon-button color="accent" aria-label="editar"  (click)="editarReserva()">
                             <mat-icon>edit</mat-icon>
                         </button>
 
-                        <button mat-icon-button color="warn"aria-label="apagar">
+                        <button mat-icon-button color="warn"aria-label="apagar"  (click)="apagarReserva()">
                             <mat-icon>delete</mat-icon>
                         </button> 
 

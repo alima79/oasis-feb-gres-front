@@ -1,0 +1,94 @@
+<p>CONTRUIR UMA TABELA E LISTAR TODOS OS CLIENTES</p>
+<P>DEPOIS LISTAR APENAS OS CLIENTES ACTIVO E RESPECTIVOS FILHOS</P>
+<P>PARA CADA CLIENTE MOSTRAR O TIPO: HOSPEDE, PARTICULAR, GRUPO - MOSTRAR SUAS INFORMACOES NOS DETALHES DI CLIENTE</P>
+<P></P>
+
+
+<div class="example-container mat-elevation-z8">
+
+    <div class="example-loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
+    
+        <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+    
+        <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+            <p>Algo parece não estar correcto. Aguarde um pouco ou refreca a pagina.</p>
+            <p>Se o erro continuar contacte o seu ADMINISTRADOR</p>
+        </div>
+
+    </div>
+
+    <div class="example-table-container">
+        
+        <table mat-table [dataSource]="clientes" class="example-table" matSort matSortActive="created" matSortDisableClear matSortDirection="desc">
+                
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef>ID</th>
+                    <td mat-cell *matCellDef="let row">{{row.id}}</td>                     
+                </ng-container>
+
+                <!-- Tipo Column -->
+                <ng-container matColumnDef="tipo">
+                    <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                    <td mat-cell *matCellDef="let row">{{row.tipo}}</td>
+                </ng-container>
+
+                <!-- Nome Column -->
+                <ng-container matColumnDef="nome">
+                    <th mat-header-cell *matHeaderCellDef>Nome</th>
+                    <td mat-cell *matCellDef="let row">{{row.nome}}</td>
+                </ng-container>
+
+                <!-- Apelido Column -->
+                <ng-container matColumnDef="apelido">
+                    <th mat-header-cell *matHeaderCellDef>Apelido</th>
+                    <td mat-cell *matCellDef="let row">{{row.apelido}}</td>
+                </ng-container>
+
+                <!-- Email Column -->
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef>Em@il</th>
+                    <td mat-cell *matCellDef="let row">{{row.email}}</td>
+                </ng-container>
+
+                <!-- Telefone Column -->
+                <ng-container matColumnDef="telefone">
+                    <th mat-header-cell *matHeaderCellDef>Telefone</th>
+                    <td mat-cell *matCellDef="let row">{{row.telefone}}</td>
+                </ng-container>
+
+                <!-- Ativo Column -->
+                <ng-container matColumnDef="ativo">
+                    <th mat-header-cell *matHeaderCellDef>Ativo</th>
+                    <td mat-cell *matCellDef="let row">{{row.ativo}}</td>                    
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef> Ações:<br> &nbsp; Ver &nbsp; | &nbsp; Editar &nbsp; | &nbsp; Apagar </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> 
+                        
+                        <button mat-icon-button color="primary" aria-label="ver" (click)="verDetalhesReserva()">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+
+                        <button mat-icon-button color="accent" aria-label="editar"  (click)="editarReserva()">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+
+                        <button mat-icon-button color="warn"aria-label="apagar"  (click)="apagarReserva()">
+                            <mat-icon>delete</mat-icon>
+                        </button> 
+
+                    </mat-cell>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+    </div>
+
+    <mat-paginator [length]="resultsLength" [pageSize]="30" aria-label="Select page of Client List results"></mat-paginator>
+
+</div>
