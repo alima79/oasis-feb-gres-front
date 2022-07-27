@@ -1,48 +1,118 @@
-import { ChangeDetectorRef, Component} from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, OnInit} from '@angular/core';
 import { ICliente } from '../../../interfaces/i-cliente';
 import {MatPaginator, MatPaginatorIntl} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {ViewChild, AfterViewInit} from '@angular/core';
-import { catchError, map, merge } from 'rxjs';
+import { ClienteCrudService } from '../../../services/cliente-crud.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { merge, Observable, of as observableOf } from 'rxjs';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-listar',
   templateUrl: './listar.component.html',
-  styleUrls: ['./listar.component.scss']
+  styleUrls: ['./listar.component.scss'],
+  providers: [
+    ClienteCrudService
+  ]
 })
-export class ListarComponent implements AfterViewInit {
+export class ListarComponent implements OnInit {
+
+  page = 0;
+  size = 12;
+  sort_item = 'id';
+  ordem = 'desc';
 
   resultsLength = 0;
-  isLoadingResults = false;
+  isLoadingResults = true;
   isRateLimitReached = false;
   displayedColumns: string[] = ['id', 'tipo', 'nome', 'apelido', 'email', 'telefone', 'ativo', 'actions'];
-  clientes!: ICliente[];
   
-  //@ViewChild(MatPaginator) paginator: MatPaginator;
-  //@ViewChild(MatSort) sort: MatSort | undefined;
+  resultado: any = [];
+  clientes: ICliente[] = [];
+  cliDataSource = new MatTableDataSource<ICliente>();  
+
+  searchKey = "";
+  filterObj = {};
 
   @ViewChild(MatSort) sort = new MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
   
-  constructor() {}
+  constructor(private clienteCrudService: ClienteCrudService,){}
 
-  ngAfterViewInit() {
-            
+  carregarClientes() {  
+      
+    // If the user changes the sort order, reset back to the first page.
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+          merge(this.sort.sortChange, this.paginator.page)
+          .pipe(
+            startWith({}),
+            switchMap(() => {
+              this.isLoadingResults = true;
+              return this.clienteCrudService.findAll(this.page,this.size, this.sort_item, this.ordem).pipe(catchError(() => observableOf(null)));
+            }),
+            map(data => {
+              // Flip flag to show that loading has finished.
+              this.isLoadingResults = false;
+              this.isRateLimitReached = data === null;
+
+              if (data === null) {
+                return [];
+              }
+
+              // Only refresh the result length if there is new data. In case of rate
+              // limit errors, we do not want to reset the paginator to zero, as that
+              // would prevent users from re-triggering requests.
+              this.resultsLength = data.total_count;
+              return data._embedded.clientes;
+            }),
+          )
+          .subscribe(data => {
+                                this.clientes = data;
+                                this.cliDataSource =  new MatTableDataSource(this.clientes);
+                                this.cliDataSource.sort = this.sort;
+                                this.cliDataSource.paginator = this.paginator;  
+                             });
+           
+    }  
+    
+    ngOnInit(): void {     
+      this.carregarClientes();    
+    }
+  
+
+  novoCliente(){
+      console.log('CRIANDO UM NOVO CLIENTE');  
   }
 
-  /*ngOnInit(): void {
-  }*/
-
-  verDetalhesReserva(){
-
+  verDetalhesCliente(){
+    console.log("ver detalhe de uma cliente()");
   }
 
-  editarReserva(){
-
+  editarCliente(){
+    console.log("Editar uma cliente()");
   }
 
-  apagarReserva(){
+  apagarCliente(){
+    console.log("Apagar uma cliente()");
+  }
 
+
+    onSearchClear(){
+      console.log('limpando o filtro....');
+      this.searchKey = "";
+      this.applyFilter(this.searchKey, "");
+    }
+
+    applyFilter(filterValue: string, key: string){
+      console.log('aplicando filtro........ ' + filterValue + ' ---  ' + key);
+      this.filterObj = {
+        value: filterValue.trim().toLowerCase(),
+        key: key
+      }
+      this.cliDataSource.filter = filterValue;
+      if (this.cliDataSource.paginator) {
+          this.cliDataSource.paginator.firstPage();
+      }
   }
 
 }

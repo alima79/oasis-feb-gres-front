@@ -11,12 +11,12 @@ export interface IReserva {
     observacoes: string;
 
     /*Client related*/ 
-    nome: string;
-    apelido: string;
-    tipo: string;
+    nomeCliente: string;
+    apelidoCliente: string;
+    tipoCliente: string;
 
     /*Restaurant related*/
-    nomesRest: string;
+    nomeRest: string;
 
     /*Seating related */
     dataInitSeat: string;

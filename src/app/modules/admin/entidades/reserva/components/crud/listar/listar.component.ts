@@ -1,22 +1,30 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-
 import { IReserva } from '../../../interfaces/i-reserva';
 import { ReservaCrudService } from '../../../services/reserva-crud.service';
-import {MatSort, Sort} from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {MatSort} from '@angular/material/sort';
+import { MatTableDataSource} from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { filter } from 'rxjs';
 import { Router } from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import { CriaralterarComponent } from '../criaralterar/criaralterar.component';
 import { DetalheComponent } from '../detalhe/detalhe.component';
 import { ApagarComponent } from '../apagar/apagar.component';
+import { ClienteCrudService } from '../../../../cliente/services/cliente-crud.service';
+import { RestauranteSeatingCrudService } from '../../../../restaurante-seating/services/restaurante-seating-crud.service';
+import { RestauranteCrudService } from '../../../../restaurante/services/restaurante-crud.service';
+import { SeatingCrudService } from '../../../../seating/services/seating-crud.service';
 
 @Component({
   selector: 'app-listar',
   templateUrl: './listar.component.html',
   styleUrls: ['./listar.component.scss'],
-  providers: [ReservaCrudService]
+  providers: [
+    ReservaCrudService,
+    ClienteCrudService,
+    RestauranteSeatingCrudService,
+    RestauranteCrudService,
+    SeatingCrudService
+  ]
 })
 
 
@@ -29,8 +37,8 @@ export class ListarComponent implements OnInit {
 
   resultado: any = [];
   reservas! : IReserva[];
-  resDataSource = new MatTableDataSource<any>();  
-  displayedColumns: string[] = ['dataReserva', 'restaurante', 'seating', 'nomeCliente', 'apelidoCliente', 'tipoCliente', 'ativo', 'estado', 'actions'];
+  resDataSource = new MatTableDataSource<IReserva>();  
+  displayedColumns: string[] = ['dataReserva', 'nomeRest', 'dataInitSeat', 'nomeCliente', 'apelidoCliente', 'tipoCliente', 'ativo', 'estado', 'actions'];
   searchKey = "";
 
   filterObj = {};
@@ -38,13 +46,18 @@ export class ListarComponent implements OnInit {
   @ViewChild(MatSort) sort = new MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator = new MatPaginator(new MatPaginatorIntl(), ChangeDetectorRef.prototype);
     
-  constructor(public reservaCrudService: ReservaCrudService, private router: Router, private dialog : MatDialog) {
-
+  constructor(public reservaCrudService: ReservaCrudService, 
+              public clienteCrudService: ClienteCrudService,
+              public restauranteSeatingCrudService: RestauranteSeatingCrudService,
+              public restauranteCrudService: RestauranteCrudService,
+              public seatingCrudService: SeatingCrudService,
+              private router: Router, 
+              private dialog : MatDialog) {
    }
 
   ngOnInit(): void {     
     this.carregarReservas();    
-    }
+  }
   
   carregarReservas() {
     return this.reservaCrudService.findAll(this.page,this.size, this.sort_item, this.ordem).subscribe((data: {}) => {
@@ -53,21 +66,21 @@ export class ListarComponent implements OnInit {
           this.reservas = this.resultado._embedded.reservas;     
           
           this.reservas.forEach( (elem) =>{
-            return this.reservaCrudService.getDataByURL(elem._links.cliente.href).subscribe((cli: {}) => {
+            return this.clienteCrudService.getDataByURL(elem._links.cliente.href).subscribe((cli: {}) => {
               let cliente = JSON.stringify(cli);
 
-              elem.nome = JSON.parse(cliente).nome;
-              elem.apelido = JSON.parse(cliente).apelido;
-              elem.tipo = JSON.parse(cliente).tipo;
+              elem.nomeCliente = JSON.parse(cliente).nome;
+              elem.apelidoCliente = JSON.parse(cliente).apelido;
+              elem.tipoCliente = JSON.parse(cliente).tipo;
 
-              return this.reservaCrudService.getDataByURL(elem._links.restauranteSeating.href).subscribe((rst: {}) => {
+              return this.restauranteSeatingCrudService.getDataByURL(elem._links.restauranteSeating.href).subscribe((rst: {}) => {
                 let resSeat = JSON.stringify(rst);
                 
-                    return this.reservaCrudService.getDataByURL(JSON.parse(resSeat)._links.restaurante.href).subscribe((rest: {}) => {
+                    return this.restauranteCrudService.getDataByURL(JSON.parse(resSeat)._links.restaurante.href).subscribe((rest: {}) => {
                       let restaur = JSON.stringify(rest);
-                      elem.nomesRest = JSON.parse(restaur).nome;
+                      elem.nomeRest = JSON.parse(restaur).nome;
 
-                        return this.reservaCrudService.getDataByURL(JSON.parse(resSeat)._links.seating.href).subscribe((seat: {}) => {
+                        return this.seatingCrudService.getDataByURL(JSON.parse(resSeat)._links.seating.href).subscribe((seat: {}) => {
                           let seating = JSON.stringify(seat);
                           elem.dataInitSeat = JSON.parse(seating).horaInicio;
                         });
@@ -81,17 +94,7 @@ export class ListarComponent implements OnInit {
           });
           this.resDataSource =  new MatTableDataSource(this.reservas);
           this.resDataSource.sort = this.sort;
-          this.resDataSource.paginator = this.paginator; 
-
-          //nao esta a funcionar so verifica duas colunas do array e para. a tabela tambem deixa de funcionar
-          /*this.resDataSource.filterPredicate = (data, filter) => {
-            console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS-----> " + filter);
-            return this.displayedColumns.some(ele => {
-              console.log("ELEM--->" + ele);
-              return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1;
-            });
-          }*/
-          
+          this.resDataSource.paginator = this.paginator;          
     });    
   }
 
@@ -101,8 +104,6 @@ export class ListarComponent implements OnInit {
   }
 
   applyFilter(filterValue: string, key: string){
-    //this.resDataSource.filter = this.searchKey.trim().toLowerCase();
-    console.log(key);
     this.filterObj = {
       value: filterValue.trim().toLowerCase(),
       key: key
@@ -113,20 +114,7 @@ export class ListarComponent implements OnInit {
     }
   }
 
-  /*navegarParaCriarAlterarReserva(){
-    this.router.navigate(["./oa-admin/gestao/entidades/reserva/criar"])
-    //console.log("criar");
-  }*/
-
-  openDialog() {
-      const dialogRef = this.dialog.open(CriaralterarComponent, {
-          width: '30%'
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
-      });
-  }
+  
 
   verDetalhesReserva(){
       const dialogRef = this.dialog.open(DetalheComponent, {
@@ -138,8 +126,7 @@ export class ListarComponent implements OnInit {
       });
   }
 
-  editarReserva(){
-    
+  editarReserva(){    
     const dialogRef = this.dialog.open(CriaralterarComponent, {
       width: '30%'
     });
@@ -149,8 +136,7 @@ export class ListarComponent implements OnInit {
     });
   }
 
-  apagarReserva(){
-    
+  apagarReserva(){    
     const dialogRef = this.dialog.open(ApagarComponent, {
       width: '30%'
     });
@@ -158,8 +144,6 @@ export class ListarComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
-  }
-
-  
+  }  
 
 }

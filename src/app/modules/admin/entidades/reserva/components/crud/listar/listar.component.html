@@ -1,38 +1,18 @@
-<P> LISTAGEM DE RESERVAS</P>
-<p> LISTA TODAS AS RESERVAS DE TODOS OS RESTAURANTE E SEATING, POR ORDEM DESCRECENTE DE DATA RESERVA!</p>
-<P> FAZER PRIMEIRO SEM ORDENAR</P>
-<P> CRIAR UMA TABELA PARA MOSTRAR TODAS AS RESERVAS. TABELA PAGINADA</P>
-<P> ADICIONAR BOTAO DE CRIAR NOVO(NAO PRECISA JA ESTÁ CRIADO)</P>
-<p> Adicionar os botoes para detalhe e editar, eliminar</p>
-<p> Criar os link para os botoes - novo - editar - apagar - detalhe - listar</p>
-<p> NO BROKEN LINKS.....</p>
-<p> THE END!!!!!</p>
-<p>--------------------------------------------------------------------------------------------------------</p>
-
-
 <div class="search-div">
-    <button mat-raised-button  (click)="openDialog()">
+    <button mat-raised-button  (click)="editarReserva()">
         <mat-icon>add</mat-icon> Nova Reserva
     </button>
     <mat-form-field class="search-form-field" floatLabel="never">
-        <input matInput [(ngModel)]="searchKey" placeholder="Procurar" autocomplete="off" (keyup)="applyFilter(searchKey, 'col1')">
+        <input matInput [(ngModel)]="searchKey" placeholder="Procurar" autocomplete="off" (keyup)="applyFilter(searchKey, 'nome')">
         <button mat-button matSuffix mat-icon-button aria-label="Apagar" *ngIf="searchKey" (click)="onSearchClear()">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>
 </div>
 
-<div class="mat-elevation-z12">
+<div class="example-container mat-elevation-z8">
 
-        <mat-table [dataSource]="resDataSource" matSort #resTbSort="matSort">
-
-
-                <!-- ID Definition -->
-                <!--<ng-container matColumnDef="id">
-                    <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
-                </ng-container>
-                -->
+        <table mat-table [dataSource]="resDataSource" matSort  class="example-table">
 
                 <!-- Data Reserva Definition -->
                 <ng-container matColumnDef="dataReserva">
@@ -41,56 +21,36 @@
                 </ng-container>
             
                 <!-- Restaurante Definition -->
-                <ng-container matColumnDef="restaurante">
+                <ng-container matColumnDef="nomeRest">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Restaurante </mat-header-cell>
-                <mat-cell *matCellDef="let row">  {{row.nomesRest}} </mat-cell>
+                <mat-cell *matCellDef="let row">  {{row.nomeRest}} </mat-cell>
                 </ng-container>
             
                 <!-- Seating Definition -->
-                <ng-container matColumnDef="seating">
+                <ng-container matColumnDef="dataInitSeat">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Seating </mat-header-cell>
                 <mat-cell *matCellDef="let row">  {{row.dataInitSeat}} </mat-cell>
                 </ng-container>
 
-                <!-- Cliente Definition -->
+                <!-- Cliente Nome Definition -->
                 <ng-container matColumnDef="nomeCliente">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Nome Cliente</mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.nome}} </mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.nomeCliente}} </mat-cell>
                 </ng-container>
 
-                <!-- Cliente Definition -->
+                <!-- Cliente Apelido Definition -->
                 <ng-container matColumnDef="apelidoCliente">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Apelido Cliente</mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.apelido}} </mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.apelidoCliente}} </mat-cell>
                 </ng-container>
 
-                <!-- Cliente Definition -->
+                <!-- Cliente Tipo Definition -->
                 <ng-container matColumnDef="tipoCliente">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Cliente </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.tipo}} </mat-cell>
+                    <mat-cell *matCellDef="let row"> {{row.tipoCliente}} </mat-cell>
                 </ng-container>
 
-                <!-- Nº Adultos Definition -->
-                <!-- <ng-container matColumnDef="numeroAdultos">
-                    <mat-header-cell *matHeaderCellDef> # Adultos </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.numeroAdulto}} </mat-cell>
-                </ng-container>
-                -->    
-
-                <!-- Nº Criança Definition -->
-                <!-- <ng-container matColumnDef="numeroCrianca">
-                    <mat-header-cell *matHeaderCellDef> # Crianças </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.numeroCrianca}} </mat-cell>
-                </ng-container>
-                -->
-
-                <!-- Data Actualizacao Definition -->
-                <!-- <ng-container matColumnDef="ultimaActualizacao">
-                    <mat-header-cell *matHeaderCellDef> Ultima Actualizacao </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> {{row.dataUltimaActualizacao}} </mat-cell>
-                </ng-container> -->
-
-                <!-- Estado Actualizacao Definition -->
+                <!-- Ativo Definition -->
                 <ng-container matColumnDef="ativo">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Ativo </mat-header-cell>
                     <mat-cell *matCellDef="let row"> 
@@ -106,23 +66,13 @@
                 </ng-container>
 
 
-                <!-- Data Actualizacao Definition -->
+                <!-- Estado Definition -->
                 <ng-container matColumnDef="estado">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> Confirmado </mat-cell>
+                    <mat-cell *matCellDef="let row"> Tirar da  </mat-cell>
                 </ng-container>
 
-                <!-- ver Definition -->
-                <!-- <ng-container matColumnDef="ver">
-                    <mat-header-cell *matHeaderCellDef> Ver </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> 
-                        <button mat-icon-button aria-label="ver">
-                            <mat-icon>visibility</mat-icon>
-                        </button> 
-                    </mat-cell>
-                </ng-container> -->
-                
-                <!-- Editar Definition -->
+                <!-- Ações Definition -->
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef> Ações:<br> &nbsp; Ver &nbsp; | &nbsp; Editar &nbsp; | &nbsp; Apagar </mat-header-cell>
                     <mat-cell *matCellDef="let row"> 
@@ -141,22 +91,10 @@
 
                     </mat-cell>
                 </ng-container>
-
-                <!-- Apagar Definition -->
-                <!-- <ng-container matColumnDef="apagar">
-                    <mat-header-cell *matHeaderCellDef> Apagar </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> 
-                        <button mat-icon-button aria-label="apagar">
-                            <mat-icon>delete</mat-icon>
-                        </button> 
-                    </mat-cell>
-                </ng-container>
-                -->
-        
                                                 
                 <ng-container matColumnDef="loading">
                     <mat-footer-cell *matFooterCellDef colspan="6"> 
-                        Carregando Dados... <!--()substituir por uma imagem animada que gira ou cresce - icone animado de progresso -->
+                        <mat-spinner></mat-spinner>
                     </mat-footer-cell>                    
                 </ng-container>
 
@@ -171,6 +109,6 @@
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
             <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':reservas!=null}"></mat-footer-row>
             <mat-footer-row *matFooterRowDef="['nodata']" [ngClass]="{'hide':!(reservas!=null && reservas.length==0)}"></mat-footer-row>
-        </mat-table>
+        </table>
         <mat-paginator [pageSizeOptions]="[5, 10, 15, 25]" [pageSize]="5" showFirstLastButtons></mat-paginator>
   </div>
