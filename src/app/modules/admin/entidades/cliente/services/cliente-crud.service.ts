@@ -26,7 +26,4 @@ export class ClienteCrudService extends ApiCrudService<MCliente>{
       catchError(this.errorMgmt));
   }
 
-  hello(){
-    console.log("Hello no Cliente CRUD SERVICE");
-  }
 }

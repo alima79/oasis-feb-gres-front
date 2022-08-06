@@ -25,7 +25,4 @@ export class RestauranteSeatingCrudService extends ApiCrudService<MRestauranteSe
       catchError(this.errorMgmt));
   }
 
-  hello(){
-    console.log("Hello no Restaurante Seating CRUD SERVICE");
-  }
 }
