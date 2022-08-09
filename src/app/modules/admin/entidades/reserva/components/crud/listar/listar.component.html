@@ -14,43 +14,36 @@
 
         <table mat-table [dataSource]="resDataSource" matSort  class="example-table">
 
-                <!-- Data Reserva Definition -->
                 <ng-container matColumnDef="dataReserva">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Data </mat-header-cell>
                 <mat-cell *matCellDef="let row"> {{row.dataReserva}} </mat-cell>
                 </ng-container>
             
-                <!-- Restaurante Definition -->
                 <ng-container matColumnDef="nomeRest">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Restaurante </mat-header-cell>
                 <mat-cell *matCellDef="let row">  {{row.nomeRest}} </mat-cell>
                 </ng-container>
             
-                <!-- Seating Definition -->
                 <ng-container matColumnDef="dataInitSeat">
                 <mat-header-cell *matHeaderCellDef mat-sort-header> Seating </mat-header-cell>
                 <mat-cell *matCellDef="let row">  {{row.dataInitSeat}} </mat-cell>
                 </ng-container>
 
-                <!-- Cliente Nome Definition -->
                 <ng-container matColumnDef="nomeCliente">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Nome Cliente</mat-header-cell>
                     <mat-cell *matCellDef="let row"> {{row.nomeCliente}} </mat-cell>
                 </ng-container>
 
-                <!-- Cliente Apelido Definition -->
                 <ng-container matColumnDef="apelidoCliente">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Apelido Cliente</mat-header-cell>
                     <mat-cell *matCellDef="let row"> {{row.apelidoCliente}} </mat-cell>
                 </ng-container>
 
-                <!-- Cliente Tipo Definition -->
                 <ng-container matColumnDef="tipoCliente">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Cliente </mat-header-cell>
                     <mat-cell *matCellDef="let row"> {{row.tipoCliente}} </mat-cell>
                 </ng-container>
 
-                <!-- Ativo Definition -->
                 <ng-container matColumnDef="ativo">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Ativo </mat-header-cell>
                     <mat-cell *matCellDef="let row"> 
@@ -66,13 +59,11 @@
                 </ng-container>
 
 
-                <!-- Estado Definition -->
                 <ng-container matColumnDef="estado">
                     <mat-header-cell *matHeaderCellDef mat-sort-header> Estado </mat-header-cell>
                     <mat-cell *matCellDef="let row"> Tirar da  </mat-cell>
                 </ng-container>
 
-                <!-- Ações Definition -->
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef> Ações:<br> &nbsp; Ver &nbsp; | &nbsp; Editar &nbsp; | &nbsp; Apagar </mat-header-cell>
                     <mat-cell *matCellDef="let row"> 
@@ -104,7 +95,6 @@
                     </mat-footer-cell>                    
                 </ng-container>
 
-            <!-- Header and Row Declarations -->
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
             <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':reservas!=null}"></mat-footer-row>

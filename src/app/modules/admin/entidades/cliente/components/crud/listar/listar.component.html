@@ -1,8 +1,3 @@
-<p>CONTRUIR UMA TABELA E LISTAR TODOS OS CLIENTES</p>
-<P>DEPOIS LISTAR APENAS OS CLIENTES ACTIVO E RESPECTIVOS FILHOS</P>
-<P>PARA CADA CLIENTE MOSTRAR O TIPO: HOSPEDE, PARTICULAR, GRUPO - MOSTRAR SUAS INFORMACOES NOS DETALHES DI CLIENTE</P>
-<P></P>
-
 <div class="search-div">
     <button mat-raised-button  (click)="novoCliente()">
         <mat-icon>add</mat-icon> Novo Cliente
@@ -32,74 +27,59 @@
         
         <table mat-table [dataSource]="cliDataSource" matSort class="example-table">
                 
-                <!-- ID Column -->
                 <ng-container matColumnDef="id">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
                     <td mat-cell *matCellDef="let row">{{row.id}}</td>                     
                 </ng-container>
 
-                <!-- Tipo Column -->
                 <ng-container matColumnDef="tipo">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
                     <td mat-cell *matCellDef="let row">{{row.tipo}}</td>
                 </ng-container>
 
-                <!-- Nome Column -->
                 <ng-container matColumnDef="nome">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
                     <td mat-cell *matCellDef="let row">{{row.nome}}</td>
                 </ng-container>
 
-                <!-- Apelido Column -->
                 <ng-container matColumnDef="apelido">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Apelido</th>
                     <td mat-cell *matCellDef="let row">{{row.apelido}}</td>
                 </ng-container>
 
-                <!-- Email Column -->
                 <ng-container matColumnDef="email">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Em@il</th>
                     <td mat-cell *matCellDef="let row">{{row.email}}</td>
                 </ng-container>
 
-                <!-- Telefone Column -->
                 <ng-container matColumnDef="telefone">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Telefone</th>
                     <td mat-cell *matCellDef="let row">{{row.telefone}}</td>
                 </ng-container>
 
-                <!-- Ativo Column -->
                 <ng-container matColumnDef="ativo">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Ativo</th>
                     <td mat-cell *matCellDef="let row">{{row.ativo}}</td>                    
                 </ng-container>
 
-                <!-- Actions Column -->
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef> Ações:<br> &nbsp; Ver &nbsp; | &nbsp; Editar &nbsp; | &nbsp; Apagar </mat-header-cell>
-                    <mat-cell *matCellDef="let row"> 
-                        
+                    <mat-cell *matCellDef="let row">                         
                         <button mat-icon-button color="primary" aria-label="ver" (click)="verDetalhesCliente()">
                             <mat-icon>visibility</mat-icon>
                         </button>
-
                         <button mat-icon-button color="accent" aria-label="editar"  (click)="editarCliente()">
                             <mat-icon>edit</mat-icon>
                         </button>
-
                         <button mat-icon-button color="warn"aria-label="apagar"  (click)="apagarCliente()">
                             <mat-icon>delete</mat-icon>
                         </button> 
-
                     </mat-cell>
                 </ng-container>
-
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
         <mat-paginator [pageSizeOptions]="[5, 10, 15, 25]" [pageSize]="5" showFirstLastButtons></mat-paginator>
-    </div>
-
-    
+    </div>   
 
 </div>

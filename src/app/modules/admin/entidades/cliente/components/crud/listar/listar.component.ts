@@ -39,8 +39,7 @@ export class ListarComponent implements OnInit {
   
   constructor(private clienteCrudService: ClienteCrudService,){}
 
-  carregarClientes() {  
-      
+  carregarClientes() {        
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
           merge(this.sort.sortChange, this.paginator.page)
@@ -58,7 +57,6 @@ export class ListarComponent implements OnInit {
               if (data === null) {
                 return [];
               }
-
               // Only refresh the result length if there is new data. In case of rate
               // limit errors, we do not want to reset the paginator to zero, as that
               // would prevent users from re-triggering requests.
@@ -77,34 +75,31 @@ export class ListarComponent implements OnInit {
     
     ngOnInit(): void {     
       this.carregarClientes();    
+    }  
+
+    novoCliente(){
+        console.log('CRIANDO UM NOVO CLIENTE');  
     }
-  
 
-  novoCliente(){
-      console.log('CRIANDO UM NOVO CLIENTE');  
-  }
+    verDetalhesCliente(){
+      console.log("ver detalhe de uma cliente()");
+    }
 
-  verDetalhesCliente(){
-    console.log("ver detalhe de uma cliente()");
-  }
+    editarCliente(){
+      console.log("Editar uma cliente()");
+    }
 
-  editarCliente(){
-    console.log("Editar uma cliente()");
-  }
-
-  apagarCliente(){
-    console.log("Apagar uma cliente()");
-  }
+    apagarCliente(){
+      console.log("Apagar uma cliente()");
+    }
 
 
     onSearchClear(){
-      console.log('limpando o filtro....');
       this.searchKey = "";
       this.applyFilter(this.searchKey, "");
     }
 
     applyFilter(filterValue: string, key: string){
-      console.log('aplicando filtro........ ' + filterValue + ' ---  ' + key);
       this.filterObj = {
         value: filterValue.trim().toLowerCase(),
         key: key

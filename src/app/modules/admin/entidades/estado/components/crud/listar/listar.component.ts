@@ -38,12 +38,9 @@ export class ListarComponent implements OnInit {
 
   pageSizeOptions: number[] = [1, 2, 5, 10];
 
-  //PAGE_EVENT
   pageEvent?: PageEvent;
 
-  //SORT_EVENT
-  sortEvent?: Sort;
-  
+  sortEvent?: Sort;  
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
     if (setPageSizeOptionsInput) {
@@ -51,10 +48,8 @@ export class ListarComponent implements OnInit {
     }
   }
 
-  //-----FORM PESQUISA
   submitted = false;
 
-  //CRIAR FORMULARIO
   formPesquisa: FormGroup = this.formBuilder.group({
     nome: [null],
     activo: [true]
@@ -69,15 +64,10 @@ export class ListarComponent implements OnInit {
   }
 
   readAll(){
-    console.log("No read all ....");
-    //PAGINAÇÃO
     this.carregando = true;
     let pageIndex = this.pageEvent? this.pageEvent.pageIndex: 0;
-    console.log('--> ' + pageIndex);
     let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
-    console.log('--> ' + pageSize);
-
-    //SORT
+    
     this.sort = this.sortEvent? this.sortEvent.active : "valor";
     this.direccaoOrdem = this.sortEvent? this.sortEvent.direction : "asc";
 
@@ -87,7 +77,6 @@ export class ListarComponent implements OnInit {
 
     myObservablePesquisa$.subscribe(
       (data: IResponsePageableEstado) => {
-        console.log('Foi lido os seguintes dados, item: ', data._embedded.estados);
         this.dataSource = data._embedded.estados;
         this.mypages = data.page;
         this.totalElements = this.mypages.totalElements;
@@ -103,7 +92,6 @@ export class ListarComponent implements OnInit {
     
   }
 
-  //ONSUBMIT
   onSubmit() {
     this.submitted = true;
     this.readAll();

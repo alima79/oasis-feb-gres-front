@@ -1,11 +1,5 @@
-<p>Listagem de Extras Presentes no Sistema - FAZER COM PAGEABLE E DEPOIS COM LIST - sPRING bOOT rEPOSITORIES</p>
-
-
 <div class="content">
-    <div class="title">
-      <h1>Listar</h1>
-    </div>
-  
+    
     <div class="mat-elevation-z8 content-table">
   
       <form [formGroup]="formPesquisa" (ngSubmit)="onSubmit" class="form-container">
@@ -34,17 +28,13 @@
             <div class="item item-1"fxFlex></div>
   
         </div>
-      </form>
-  
+      </form>  
   
   
   
       <table mat-table [dataSource]="dataSource" class="table" matSort (matSortChange)="sortEvent = $event; readAll()">
   
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-  
-        <!-- ID Column -->
+        
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
             <td mat-cell *matCellDef="let row"> {{row.id}} </td>
@@ -79,7 +69,7 @@
                   <td mat-cell *matCellDef="let row"> {{row.dataUltimaActualizacao}} </td>
                 </ng-container>
   
-        <!-- EDITAR Column -->
+        
         <ng-container matColumnDef="acoes">
           <th class="mat-header" mat-header-cell *matHeaderCellDef> EDITAR </th>
           <td mat-cell *matCellDef="let row">

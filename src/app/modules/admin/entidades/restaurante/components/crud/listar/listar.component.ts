@@ -74,16 +74,11 @@ export class ListarComponent implements OnInit {
     this.readAll();
   }
   readAll() {
-    console.log('GOING TO READ ALL RESTAURANTE...................');
-
-    console.log("No read all ....");
     //PAGINAÇÃO
     this.carregando = true;
     let pageIndex = this.pageEvent? this.pageEvent.pageIndex: 0;
-    console.log('--> ' + pageIndex);
-    let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
-    console.log('--> ' + pageSize);
-
+     let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
+    
     //SORT
     this.sort = this.sortEvent? this.sortEvent.active : "id";
     this.direccaoOrdem = this.sortEvent? this.sortEvent.direction : "asc";
@@ -94,7 +89,6 @@ export class ListarComponent implements OnInit {
 
     myObservablePesquisa$.subscribe(
       (data: IResponsePageableRestaurante) => {
-        console.log('Foi lido os seguintes dados, item: ', data._embedded.restaurantes);
         this.dataSource = data._embedded.restaurantes;
         this.mypages = data.page;
         this.totalElements = this.mypages.totalElements;
