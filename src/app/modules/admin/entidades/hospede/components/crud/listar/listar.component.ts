@@ -116,7 +116,6 @@ export class ListarComponent implements OnInit {
 
                 let myObservablePesquisa1$: Observable<MCliente>;
 
-                //myObservablePesquisa1$ = this.clienteCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
                 myObservablePesquisa1$ = this.clienteCrudService.getDataByURL(elem._links.cliente.href);
                 myObservablePesquisa1$.subscribe(
                         (data1: MCliente) => {
@@ -134,8 +133,6 @@ export class ListarComponent implements OnInit {
                         },
                         () => {this.requestCompleto = true; }
                 );
-
-
         });
 
       },
