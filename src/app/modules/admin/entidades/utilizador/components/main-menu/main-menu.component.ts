@@ -26,7 +26,7 @@ export class MainMenuComponent implements OnInit {
   }
 
   navegarParaListarConjunto(){
-    console.log("Metodo para Listar Utilizador");
+    //console.log("Metodo para Listar Utilizador");
     this.router.navigate(["./oa-admin/gestao/entidades/utilizador/listar"])
   }
 

@@ -89,7 +89,6 @@ export class ListarComponent implements OnInit {
   }
 
   readAll(){
-    console.log('--------------------------');
     this.carregando = true;
     let pageIndex = this.pageEvent? this.pageEvent.pageIndex: 0;
     let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
@@ -104,25 +103,17 @@ export class ListarComponent implements OnInit {
 
     myObservablePesquisa$.subscribe(
       (data: IResponsePageableRestauranteSeating) => {
-        console.log('Foi lido os seguintes dados, : ', data._embedded.restaurante_seating);
         this.dataSource = data._embedded.restaurante_seating;
         this.mypages = data.page;
         this.totalElements = this.mypages.totalElements;
         this.carregando = false; 
         
         this.dataSource.forEach((elem) => {
-          console.log("Elem--> " + elem._links.restaurante.href);
-          console.log("Elem--> " + elem._links.seating.href);
-
           let myObservablePesquisa1$: Observable<MRestaurante>;
-
-          //myObservablePesquisa1$ = this.clienteCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
           myObservablePesquisa1$ = this.restauranteCrudService.getDataByURL(elem._links.restaurante.href);
           myObservablePesquisa1$.subscribe(
                   (data1: MRestaurante) => {
-                          console.log('Foi lido os seguintes dados, Restaurante: ', data1.nome);
-                          elem.restaurante = data1.nome;
-
+                         elem.restaurante = data1.nome;
                   },
                   error => {
                     this.erroMsg = error;
@@ -134,11 +125,9 @@ export class ListarComponent implements OnInit {
 
           let myObservablePesquisa2$: Observable<MSeating>;
 
-          //myObservablePesquisa1$ = this.clienteCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
           myObservablePesquisa2$ = this.seatingCrudService.getDataByURL(elem._links.seating.href);
           myObservablePesquisa2$.subscribe(
                   (data2: MSeating) => {
-                          console.log('Foi lido os seguintes dados, SEATING: ', data2.horaInicio);
                           elem.horaInicio = data2.horaInicio;
                           elem.horaFim = data2.horaFim;
                           elem.completo = data2.completo;
@@ -150,8 +139,6 @@ export class ListarComponent implements OnInit {
                   },
                   () => {this.requestCompleto = true; }
           );
-
-
   });
 
       },

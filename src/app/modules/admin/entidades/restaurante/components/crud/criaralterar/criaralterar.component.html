@@ -1,1 +1,37 @@
-<p>criaralterar works!</p>
+<h1 mat-dialog-title>Criar um Novo RESTAURANTE</h1>
+
+<div mat-dialog-content>
+    <form [formGroup]="formCriarAlterarRestaurante">
+    
+        <mat-form-field appearance="outline">
+            <mat-label>NOME</mat-label>
+            <input formControlName="nome"  matInput placeholder="nome"> 
+        </mat-form-field>   
+
+        <mat-form-field appearance="outline">
+            <mat-label>LOTAÇÃO MÁXIMA:</mat-label>
+            <input formControlName="lotacaoMaxima"  matInput placeholder="lotação maxima" type="number">
+        </mat-form-field>
+            
+        <label for=""><h3>ATIVO:</h3></label>
+        <mat-radio-group formControlName="ativo" >
+            <mat-radio-button value="sim">
+                    Sim.
+            </mat-radio-button>
+            &nbsp;&nbsp;
+            <mat-radio-button value="nao">
+                Não.
+            </mat-radio-button>
+        </mat-radio-group>
+            
+    </form>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" style="margin-left: 8px;" (click)="addRestaurante()">Guardar</button>
+    <button mat-raised-button color="secondary" style="margin-left: 8px;" (click)="resetFields()">Limpar</button>
+    <button mat-raised-button color="warn" style="margin-left: 8px;" mat-dialog-close>Cancelar</button>
+</div>
+
+
+

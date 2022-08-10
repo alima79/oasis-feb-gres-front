@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-criaralterar',
@@ -6,10 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./criaralterar.component.scss']
 })
 export class CriaralterarComponent implements OnInit {
+  formCriarAlterarSeating!: FormGroup;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+  addSeating(){
+    console.log("ADICIONAR UM  SEATING");
+    }
+
+  resetFields(){
+    this.formCriarAlterarSeating.reset();
+    alert('CLEAN FIELDS');
   }
 
 }

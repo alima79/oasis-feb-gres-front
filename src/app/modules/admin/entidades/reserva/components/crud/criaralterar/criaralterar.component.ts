@@ -10,12 +10,12 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 export class CriaralterarComponent implements OnInit {
 
   formCriarAlterarReserva !: FormGroup;
-  
+
   tipoCliente = '';
 
   extraFormControl = new FormControl('');
   listaExtras: string[] = ["Extra 1", "Extra 2", "Extra 3", "Extra 4", "Extra 5"];
- 
+
 
 
 
@@ -23,13 +23,13 @@ export class CriaralterarComponent implements OnInit {
 
   ngOnInit(): void {
     this.formCriarAlterarReserva = this.formBuilder.group({
-        
+
         restaurante : ['', Validators.required],
         seating : ['', Validators.required],
         dataReserva : ['', Validators.required],
-        estado : ['', Validators.required], 
-        ativo : ['', Validators.required], 
-        
+        estado : ['', Validators.required],
+        ativo : ['', Validators.required],
+
         //cliente related
         tipoCliente : ['', Validators.required],
         nomeCliente : ['', Validators.required],
@@ -38,32 +38,32 @@ export class CriaralterarComponent implements OnInit {
         telefone : ['', Validators.required],
 
 
-                      // hospede
-                      numeroQuarto : ['', Validators.required],
-                      nacionalidade : ['', Validators.required],
+        // hospede
+        numeroQuarto : ['', Validators.required],
+        nacionalidade : ['', Validators.required],
 
-                      //prticular
-                      observacaoPartb : ['', Validators.required],
+        //prticular
+        observacaoPartb : ['', Validators.required],
 
-                      // grupo
-                      instituicao : ['', Validators.required],
-                      observacaoGrupo : ['', Validators.required],
-                      descricaoGrupo : ['', Validators.required],
+        // grupo
+        instituicao : ['', Validators.required],
+        observacaoGrupo : ['', Validators.required],
+        descricaoGrupo : ['', Validators.required],
 
         numAdultos : ['', Validators.required],
         numCrianca : ['', Validators.required],
-        observacoes : ['',Validators.required],       
+        observacoes : ['',Validators.required],
         comentarios : ['', Validators.required],
-        
-        
+
+
         pagamento : ['', Validators.required],
-                
+
         extras : ['', Validators.required],
 
         user : ['', Validators.required],
 
         menu : ['', Validators.required]
-        
+
     });
   }
 
@@ -79,8 +79,8 @@ export class CriaralterarComponent implements OnInit {
     //get info hospede
     //get info particular
     //get info grupo
-    
-    
+
+
   }
 
   resetFields(){
@@ -94,6 +94,6 @@ export class CriaralterarComponent implements OnInit {
       console.log(this.tipoCliente);
   }
 
-  
+
 
 }

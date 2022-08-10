@@ -28,7 +28,7 @@ export class MainMenuComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
-}
+  }
 
   navegarParaListarConjunto(){
     this.router.navigate(["./oa-admin/gestao/entidades/reserva/listar"])
