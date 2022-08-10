@@ -47,7 +47,7 @@ export class ListarComponent implements OnInit {
 
   //SORT_EVENT
   sortEvent?: Sort;
-  
+
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
     if (setPageSizeOptionsInput) {
@@ -64,8 +64,8 @@ export class ListarComponent implements OnInit {
     activo: [true]
   });
 
-  constructor(private formBuilder: FormBuilder, 
-              private hospedeCrudService: HospedeCrudService, 
+  constructor(private formBuilder: FormBuilder,
+              private hospedeCrudService: HospedeCrudService,
               private clienteCrudService: ClienteCrudService, ){
 
   }
@@ -109,22 +109,11 @@ export class ListarComponent implements OnInit {
         this.mypages = data.page;
         this.totalElements = this.mypages.totalElements;
         this.carregando = false;
-        //console.log("Teste---> " + this.dataSource[0]._links.cliente.href);
-        //console.log("Teste---> " + this.dataSource[1]._links.cliente.href);
-        //console.log("Teste---> " + this.dataSource[2]._links.cliente.href);
-         
-        //this.dataSource[0].nomeCliente = "Adair";
-        //this.dataSource[0].apelidoCliente = "Lima";
-        //this.dataSource[0].email = "alima@gmii.com";
-        //this.dataSource[0].telefone = "9564444";
 
-        //percorer o array de hospedes para obter o link do cliente relativo.
-        //obter da base dados o respectivo cliente, extrai nome, apelido, email e telefone
-        //colocar estes valores nos respectvos hospedes.
 
         this.dataSource.forEach((elem) => {
                 console.log("Elem--> " + elem._links.cliente.href);
-                
+
                 let myObservablePesquisa1$: Observable<MCliente>;
 
                 //myObservablePesquisa1$ = this.clienteCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
@@ -157,7 +146,7 @@ export class ListarComponent implements OnInit {
       },
       () => { this.requestCompleto = true; }
     );
-    
+
   }
 
 
