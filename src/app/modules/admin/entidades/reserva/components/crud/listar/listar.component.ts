@@ -31,7 +31,7 @@ import { SeatingCrudService } from '../../../../seating/services/seating-crud.se
 export class ListarComponent implements OnInit {
 
   page = 0;
-  size = 12;
+  size = 20;
   sort_item = 'dataReserva';
   ordem = 'desc';
 

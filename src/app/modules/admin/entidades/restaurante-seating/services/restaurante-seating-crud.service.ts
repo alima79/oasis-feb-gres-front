@@ -9,6 +9,9 @@ import { take, delay } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class RestauranteSeatingCrudService extends ApiCrudService<MRestauranteSeating>{
+  createRestauranteSeatingFromIReqExtra(arg0: any) {
+    throw new Error('Method not implemented.');
+  }
 
   constructor(protected override  http: HttpClient) {
     super(http, "restauranteSeating");
@@ -23,6 +26,21 @@ export class RestauranteSeatingCrudService extends ApiCrudService<MRestauranteSe
       delay(2000),
       take(1),
       catchError(this.errorMgmt));
+  }
+
+  createExtraFromIReqRestauranteSeating(record: any){
+    console.log('RESSEAT CRUD Service::::CRIAR RESSEAT!!!   ' + record);
+    console.log('RESSEAT CRUD Service::::CRIAR RESSEAT!!!   ' + record.data);
+    console.log('RESSEAT CRUD Service::::CRIAR RESSEAT!!!   ' + record.dataCriacao);
+    console.log('RESSEAT CRUD Service::::CRIAR RESSEAT!!!   ' + record.dataUltimaActualizacao);
+    let url = `${super.getAPIURL}`;
+    console.log("URL++++++++++++++ " +url);
+
+    return this.http.post(url, record,  { headers: super.getheaders })
+      .pipe(
+        take(1), //depois da resposta ele faz unsubscribe automaticamente
+        catchError(this.errorMgmt)
+      );
   }
 
 }

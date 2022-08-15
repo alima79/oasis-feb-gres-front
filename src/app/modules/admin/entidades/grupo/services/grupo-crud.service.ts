@@ -25,4 +25,20 @@ export class GrupoCrudService extends ApiCrudService<MGrupo>{
       catchError(this.errorMgmt));
   }
 
+  createExtraFromIReqGrupo(record: any){
+    /*console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record);
+    console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record.nome);
+    console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record.dataCriacao);
+    console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record.dataUltimaActualizacao);
+    */
+   let url = `${super.getAPIURL}`;
+    console.log("URL++++++++++++++ " +url);
+
+    return this.http.post(url, record,  { headers: super.getheaders })
+      .pipe(
+        take(1), //depois da resposta ele faz unsubscribe automaticamente
+        catchError(this.errorMgmt)
+      );
+  }
+
 }

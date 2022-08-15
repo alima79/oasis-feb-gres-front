@@ -1,11 +1,16 @@
 import { validateVerticalPosition } from '@angular/cdk/overlay';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { IReqReserva } from '../../../interfaces/i-req-reserva';
+import { ReservaCrudService } from '../../../services/reserva-crud.service';
 
 @Component({
   selector: 'app-criaralterar',
   templateUrl: './criaralterar.component.html',
-  styleUrls: ['./criaralterar.component.scss']
+  styleUrls: ['./criaralterar.component.scss'],
+  providers: [
+    ReservaCrudService
+  ]
 })
 export class CriaralterarComponent implements OnInit {
 
@@ -19,7 +24,8 @@ export class CriaralterarComponent implements OnInit {
 
 
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder,
+              private reservaCrudService: ReservaCrudService) { }
 
   ngOnInit(): void {
     this.formCriarAlterarReserva = this.formBuilder.group({
@@ -73,12 +79,26 @@ export class CriaralterarComponent implements OnInit {
     //console.log(this.formCriarAlterarReserva.controls['tipoCliente'].value);
     console.log(this.extraFormControl.value);
 
-    //get info reserva a inserir
+    this.reservaCrudService.createReservaFromIReqReserva(this.criarObjectoReserva()).subscribe(
+      success => {
+        //this.hasErroMsg = false;
+        //this.msgSnackBar("ITEM criado");
+        console.log('CRIADO ITEM: sucesso: ' + success);
+        //this.router.navigate(['/oa-admin/gestao/entidades/item/listar']);
+      },
+      error => {
+        //this.hasErroMsg = true;
+        let erroMsg = "CRIADO ITEM: Erro no Create Item \n"+error;
+        //this.requestCompleto = false;
+        //console.log(this.erroMsg);
+        //alert(erroMsg);
+      },
 
-    //get info cliente
-    //get info hospede
-    //get info particular
-    //get info grupo
+      () => {
+        console.log('CRIAR ITEM: request completo');
+        //this.requestCompleto = true;
+      }
+    );
 
 
   }
@@ -92,6 +112,30 @@ export class CriaralterarComponent implements OnInit {
   setTipoCliente(){
       this.tipoCliente = this.formCriarAlterarReserva.controls['tipoCliente'].value;
       console.log(this.tipoCliente);
+  }
+
+  criarObjectoReserva(): IReqReserva{
+    console.log('CRIANDO OBJECTO EXTRA......');
+    
+    return {
+      "numeroAdulto": 4, 
+      "numeroCrianca": 1,
+      "dataReserva": "2022-08-25", 
+      "observacoes": "dgfg fgdfg dfg dd", 
+      "comentarios": "tktkt t ttkt tkt tk",
+      
+      "ativo": true,
+      "dataCriacao": '2022-08-16T12:10:00',
+      "dataUltimaActualizacao": '2022-08-16T12:10:00',
+
+      "estado": "http://localhost:8080/estados/1",
+      "cliente": "http://localhost:8080/clientes/1",
+      "utilizador": "http://localhost:8080/utilizadores/1",
+      "pagamento": "http://localhost:8080/pagamentos/1",
+      "restauranteSeating": "http://localhost:8080/restauranteSeating/1",
+      "extras": ["http://localhost:8080/extras/1"]
+
+     }
   }
 
 

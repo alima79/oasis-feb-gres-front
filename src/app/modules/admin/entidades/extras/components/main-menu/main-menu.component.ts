@@ -23,6 +23,8 @@ export class MainMenuComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
+
+    console.log('gggggggggggggggggggggggg');
   }
 
   navegarParaListarConjunto(){
