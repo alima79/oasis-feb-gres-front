@@ -28,7 +28,7 @@ export class ParticularCrudService extends ApiCrudService<MParticular>{
       catchError(this.errorMgmt));
   }
 
-  createExtraFromIReqParticular(record: any){
+  createParticularFromIReqParticular(record: any){
     /*console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record);
     console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record.nome);
     console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record.dataCriacao);

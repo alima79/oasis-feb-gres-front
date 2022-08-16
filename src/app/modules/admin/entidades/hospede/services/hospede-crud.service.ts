@@ -26,7 +26,7 @@ export class HospedeCrudService extends ApiCrudService<MHospede>{
       catchError(this.errorMgmt));
   }
 
-  createExtraFromIReqHospede(record: any){
+  createHospedeFromIReqHospede(record: any){
     /*console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record);
     console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record.nome);
     console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record.dataCriacao);

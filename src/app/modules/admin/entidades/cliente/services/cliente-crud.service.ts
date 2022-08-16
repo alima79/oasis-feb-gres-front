@@ -5,6 +5,7 @@ import { ApiCrudService } from 'src/app/my-core/services/api-crud.service';
 import { IResponsePageableCliente } from '../interfaces/i-response-pageable-cliente';
 import { MCliente } from '../models/m-cliente';
 import { take, delay } from 'rxjs/operators';
+import { IReqCliente } from '../interfaces/i-req-cliente';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class ClienteCrudService extends ApiCrudService<MCliente>{
       catchError(this.errorMgmt));
   }
 
-  createExtraFromIReqCliente(record: any){
+  createClienteFromIReqCliente(record: any){
     /*console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record);
     console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record.nome);
     console.log('Extra CRUD Service::::CRIAR EXTRA!!!   ' + record.dataCriacao);
