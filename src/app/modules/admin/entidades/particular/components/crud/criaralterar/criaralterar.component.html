@@ -1,1 +1,13 @@
-<p>criaralterar works!</p>
+<h1 mat-dialog-title>Criar um Novo Particular</h1>
+
+<div mat-dialog-content>
+    <form [formGroup]="formCriarAlterarParticular">
+
+    </form>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" style="margin-left: 8px;" (click)="addCliente()">Guardar</button>
+    <button mat-raised-button color="secondary" style="margin-left: 8px;" (click)="resetFields()">Limpar</button>
+    <button mat-raised-button color="warn" style="margin-left: 8px;" mat-dialog-close>Cancelar</button>
+</div>
