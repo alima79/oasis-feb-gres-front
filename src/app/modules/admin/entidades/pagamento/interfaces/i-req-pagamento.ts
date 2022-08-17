@@ -1,7 +1,7 @@
 export interface IReqPagamento {
+    id: number,
     tipo: string,
-    descricao: string,
-    
+    descricao: string,    
     ativo:boolean,
     dataCriacao: string, 
     dataUltimaActualizacao: string

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IReqMenu } from '../../../interfaces/i-req-menu';
 import { MenuCrudService } from '../../../services/menu-crud.service';
+import { ListarComponent } from '../listar/listar.component';
 
 @Component({
   selector: 'app-criaralterar',
@@ -13,34 +16,87 @@ import { MenuCrudService } from '../../../services/menu-crud.service';
 })
 export class CriaralterarComponent implements OnInit {
 
-  formCriarAlterarReserva !: FormGroup;
+  formCriarAlterarMenu !: FormGroup;
+  acao = "criar";
+  requestCompleto= false;
+  submitted = false;
+  erroMsg?: string;
+  hasErroMsg: boolean = false;
+
   
-  constructor(private menuCrudService: MenuCrudService) { }
+  constructor(private menuCrudService: MenuCrudService,
+              private route: ActivatedRoute,
+              private formBuilder: FormBuilder,
+              private router: Router,
+              public dialogRef: MatDialogRef<ListarComponent>) { }
 
   ngOnInit(): void {
+    this.preencherFormulario();
   }
 
+  preencherFormulario(): void {
+    //LER DADOS URL: SABER ID e ACCAO
+    this.route.params.subscribe((params: any) =>{
+      console.log(params);
+      const id = params['id'];
+      if(id){
+        this.preencherFormularioUpdate(id);
+      }else{
+        this.preencherFormularioCreate();
+      }
+    });
+  }
+  
+  preencherFormularioCreate(): void {
+    this.acao="criar";
+    console.log("ACCAO: ", this.acao);
+    this.incializarFormMenu();
+  }
+
+
+  incializarFormMenu(): void {
+    this.formCriarAlterarMenu = this.formBuilder.group({
+      id: [null],
+      nome: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      descricao: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      ativo: [null, [Validators.required]],
+      dataCriacao: [null],
+      dataAtualizacao: [null]
+    });
+  }
+
+
+
+  preencherFormularioUpdate(id: number) {
+    console.log('Preencher Formulario para Update Menu com ID: ' + id);    
+  } 
+
   addMenu(){
-    console.log("ADICIONAR UM EXTRA");
+    console.log("ADICIONAR UM Menu");
 
     this.menuCrudService.createMenuFromIReqMenu(this.criarObjectoMenu()).subscribe(
       success => {
-        //this.hasErroMsg = false;
-        //this.msgSnackBar("ITEM criado");
-        console.log('CRIADO ITEM: sucesso: ' + success);
-        //this.router.navigate(['/oa-admin/gestao/entidades/item/listar']);
+        console.log('CRIADO MENU: sucesso: ' + success);
+        alert('MENU criado com Sucesso: ' + success);
+
+        //fechar o dialog pop-up
+        this.dialogRef.close();
+
+        this.router.navigateByUrl('/', {skipLocationChange: true} ).then(() => {
+          this.router.navigate(['/oa-admin/gestao/entidades/menu/listar']);
+        });
       },
       error => {
-        //this.hasErroMsg = true;
-        let erroMsg = "CRIADO ITEM: Erro no Create Item \n"+error;
-        //this.requestCompleto = false;
-        //console.log(this.erroMsg);
-        //alert(erroMsg);
+        this.hasErroMsg = true;
+        this.erroMsg = "CRIADO MENU: Erro no Create MENU \n"+error;
+        this.requestCompleto = false;
+        console.log(this.erroMsg);
+        alert(this.erroMsg);
       },
 
       () => {
-        console.log('CRIAR ITEM: request completo');
-        //this.requestCompleto = true;
+        console.log('CRIAR MENU: request completo');
+        this.requestCompleto = true;
       }
     );
   }
@@ -49,16 +105,22 @@ export class CriaralterarComponent implements OnInit {
     console.log('CRIANDO OBJECTO MENU......');
     
     return {
-      "nome": "Menu 7",
-      "descricao": "teste insercao menu",
-      "ativo": false,
-      "dataCriacao": '2022-08-16T12:10:00',
-      "dataUltimaActualizacao": '2022-08-16T12:10:00'
+      "id": this.formCriarAlterarMenu?.value.id,
+      "nome": this.formCriarAlterarMenu?.value.nome,
+      "descricao": this.formCriarAlterarMenu?.value.descricao,
+      "ativo": this.formCriarAlterarMenu?.value.ativo,
+      "dataCriacao": this.getSystemCurrentDateTime(),
+      "dataUltimaActualizacao": this.getSystemCurrentDateTime()
      }
   }
 
+
+  getSystemCurrentDateTime(): string {
+    return '2022-08-18T20:10:00'
+  }
+  
   resetFields(){
-    this.formCriarAlterarReserva.reset();
+    this.formCriarAlterarMenu.reset();
     alert('CLEAN FIELDS');
   }  
 

@@ -11,24 +11,21 @@
         <mat-form-field appearance="outline">
             <mat-label>DESCRIÇÃO:</mat-label>
             <textarea formControlName="descricao" matInput></textarea>
-        </mat-form-field>
-            
+        </mat-form-field>            
         
-            <label for=""><h3>ATIVO:</h3></label>
-            <mat-radio-group formControlName="ativo" >
-                <mat-radio-button value="true">
-                        Sim.
-                </mat-radio-button>
-                &nbsp;&nbsp;
-                <mat-radio-button value="false">
-                    Não.
-                </mat-radio-button>
-            </mat-radio-group>
-            <br>
-            <label *ngIf="acao=='alterar'" for="dataCriacao" formControlName="dataCriacao">Data Criacao: </label>
-            <label *ngIf="acao=='alterar'" for="dataAtualizacao" formControlName="dataAtualizacao">  -   Data Atualizacao: </label>
-        
-        
+        <label for=""><h3>ATIVO:</h3></label>
+        <mat-radio-group formControlName="ativo" >
+            <mat-radio-button value="true">
+                    Sim.
+            </mat-radio-button>
+            &nbsp;&nbsp;
+            <mat-radio-button value="false">
+                Não.
+            </mat-radio-button>
+        </mat-radio-group>
+        <br>
+        <label *ngIf="acao=='alterar'" for="dataCriacao" formControlName="dataCriacao">Data Criacao: </label>
+        <label *ngIf="acao=='alterar'" for="dataAtualizacao" formControlName="dataAtualizacao">  -   Data Atualizacao: </label>        
             
     </form>
 </div>
