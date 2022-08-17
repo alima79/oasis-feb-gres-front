@@ -20,8 +20,10 @@ export class MainMenuComponent implements OnInit {
         width: '30%'
     });
 
+    
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      console.log(`Dialog result: ${result}`)
+
     });
   }
 
