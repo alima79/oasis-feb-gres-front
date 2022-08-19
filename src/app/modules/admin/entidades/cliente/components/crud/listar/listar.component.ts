@@ -18,7 +18,7 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 export class ListarComponent implements OnInit {
 
   page = 0;
-  size = 12;
+  size = 40;
   sort_item = 'id';
   ordem = 'desc';
 

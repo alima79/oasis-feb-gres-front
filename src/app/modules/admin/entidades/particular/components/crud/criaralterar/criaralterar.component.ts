@@ -117,6 +117,7 @@ export class CriaralterarComponent implements OnInit {
     console.log('CRIANDO OBJECTO Cliente......');
     
     return {
+      "id": 12,
       "nome": "Ricardo1", 
       "apelido": "Santos", 
       "email": "restrela1@gmail.com",
@@ -133,6 +134,7 @@ export class CriaralterarComponent implements OnInit {
     console.log('CRIANDO OBJECTO PARTICULAR......');
     
     return {
+      "id": 9,
       "observacao": "tenha cuidado com este cliente particular- versao 2",
       "cliente": _url
      }

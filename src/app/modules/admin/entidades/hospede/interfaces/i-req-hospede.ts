@@ -1,4 +1,5 @@
 export interface IReqHospede {
+    id: number,
     numeroQuarto: number, 
     nacionalidade: string,
 

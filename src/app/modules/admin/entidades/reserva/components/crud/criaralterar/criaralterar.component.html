@@ -2,7 +2,7 @@
 
 <div mat-dialog-content>
     <form [formGroup]="formCriarAlterarReserva">
-    
+
             <mat-form-field appearance="outline">
                 <mat-label>Restaurante</mat-label>
                 <mat-select formControlName="restaurante" placeholder="restaurante">
@@ -44,35 +44,35 @@
                                         <mat-option value="grupo">Grupo</mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                
-                    
+
+
                                 <mat-form-field appearance="outline">
                                     <mat-label>Nome</mat-label>
-                                    <input formControlName="nomeCliente"  matInput placeholder="nome"> 
+                                    <input formControlName="nomeCliente"  matInput placeholder="nome">
                                 </mat-form-field>
-                    
+
                                 <mat-form-field appearance="outline">
                                     <mat-label>Apelido</mat-label>
-                                    <input formControlName="apelidoCliente" matInput placeholder="apelido"> 
-                                </mat-form-field> 
-                    
+                                    <input formControlName="apelidoCliente" matInput placeholder="apelido">
+                                </mat-form-field>
+
                                 <mat-form-field appearance="outline">
                                     <mat-label>Em@il</mat-label>
-                                    <input formControlName="email" matInput placeholder="em@ail"> 
-                                </mat-form-field> 
-                    
+                                    <input formControlName="email" matInput placeholder="em@ail">
+                                </mat-form-field>
+
                                 <mat-form-field appearance="outline">
                                     <mat-label>Telefone</mat-label>
-                                    <input formControlName="telefone" matInput placeholder="telefone"> 
+                                    <input formControlName="telefone" matInput placeholder="telefone">
                                 </mat-form-field>
-            
+
                             </mat-card-content>
-                            
+
                             <!-- Hospede Related-->
                             <mat-card class="example-card" *ngIf="tipoCliente=='hospede'">
                                 <mat-card-title>Hospede</mat-card-title>
                                 <mat-card-subtitle>Introduza as Informações do Hospede</mat-card-subtitle>
-                                <mat-card-content>                      
+                                <mat-card-content>
                                   <mat-form-field appearance="outline">
                                     <mat-label>Nacionalidade</mat-label>
                                     <mat-select formControlName="nacionalidade" placeholder="nacionalidade">
@@ -84,7 +84,7 @@
                                         <mat-option value="caboverde">Cabo verde</mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                
+
                                 <mat-form-field appearance="outline">
                                     <mat-label>Numero Quarto</mat-label>
                                     <mat-select formControlName="numeroQuarto" placeholder="quarto">
@@ -96,56 +96,56 @@
                                         <mat-option value="101">101</mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                </mat-card-content>                    
-                              </mat-card>
-            
-                              <!-- Particular Related-->
-                              <mat-card class="example-card" *ngIf="tipoCliente=='particular'">
-                                <mat-card-title>Particular</mat-card-title>
-                                <mat-card-subtitle>Introduza as Informações do Particular</mat-card-subtitle>
-                                <mat-card-content>                      
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Observações:</mat-label>
-                                        <textarea formControlName="observacaoPartb" matInput></textarea>
-                                    </mat-form-field>
-                                </mat-card-content>                    
-                              </mat-card>
-            
-            
-                              <!-- Grupo Related-->
-                              <mat-card class="example-card" *ngIf="tipoCliente=='grupo'">
-                                <mat-card-title>Grupo</mat-card-title>
-                                <mat-card-subtitle>Introduza as Informações do Grupo</mat-card-subtitle>
-                                <mat-card-content>  
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Instituição</mat-label>
-                                        <input formControlName="instituicao" matInput placeholder="instituição/empresa"> 
-                                    </mat-form-field>
-                        
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Descrição:</mat-label>
-                                        <textarea formControlName="observacaoGrupo" matInput></textarea>
-                                    </mat-form-field>
-                        
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Observações:</mat-label>
-                                        <textarea formControlName="descricaoGrupo" matInput></textarea>
-                                    </mat-form-field>                    
-                                    
-                                </mat-card-content>                    
-                              </mat-card>
-            
-                          </mat-card>            
+                                </mat-card-content>
+                            </mat-card>
+
+                            <!-- Particular Related-->
+                            <mat-card class="example-card" *ngIf="tipoCliente=='particular'">
+                              <mat-card-title>Particular</mat-card-title>
+                              <mat-card-subtitle>Introduza as Informações do Particular</mat-card-subtitle>
+                              <mat-card-content>
+                                  <mat-form-field appearance="outline">
+                                      <mat-label>Observações:</mat-label>
+                                      <textarea formControlName="observacaoPartb" matInput></textarea>
+                                  </mat-form-field>
+                              </mat-card-content>
+                            </mat-card>
+
+
+                            <!-- Grupo Related-->
+                            <mat-card class="example-card" *ngIf="tipoCliente=='grupo'">
+                              <mat-card-title>Grupo</mat-card-title>
+                              <mat-card-subtitle>Introduza as Informações do Grupo</mat-card-subtitle>
+                              <mat-card-content>
+                                  <mat-form-field appearance="outline">
+                                      <mat-label>Instituição</mat-label>
+                                      <input formControlName="instituicao" matInput placeholder="instituição/empresa">
+                                  </mat-form-field>
+
+                                  <mat-form-field appearance="outline">
+                                      <mat-label>Descrição:</mat-label>
+                                      <textarea formControlName="observacaoGrupo" matInput></textarea>
+                                  </mat-form-field>
+
+                                  <mat-form-field appearance="outline">
+                                      <mat-label>Observações:</mat-label>
+                                      <textarea formControlName="descricaoGrupo" matInput></textarea>
+                                  </mat-form-field>
+
+                              </mat-card-content>
+                            </mat-card>
+
+                          </mat-card>
             <!--                        -->
             <mat-card>
                 <mat-form-field appearance="outline">
                     <mat-label>Adultos</mat-label>
-                    <input formControlName="numAdultos" matInput type="number" placeholder="numero">         
+                    <input formControlName="numAdultos" matInput type="number" placeholder="numero">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Crianças</mat-label>
-                    <input formControlName="numCrianca" matInput type="number" placeholder="numero">         
+                    <input formControlName="numCrianca" matInput type="number" placeholder="numero">
                 </mat-form-field>
 
                 <!--       Pagamento-->
@@ -171,7 +171,7 @@
                         <mat-option value="check_out">Check-Out</mat-option>
                     </mat-select>
                 </mat-form-field>
-            </mat-card>    
+            </mat-card>
             <mat-form-field appearance="fill">
                 <mat-label>EXTRAS:</mat-label>
                 <mat-select [formControl]="extraFormControl" multiple>
@@ -187,19 +187,19 @@
             <mat-form-field appearance="outline">
                 <mat-label>Comentários</mat-label>
                 <textarea formControlName="comentarios" matInput></textarea>
-            </mat-form-field>    
-            
+            </mat-form-field>
+
             <label for=""><h3>Ativo:</h3></label>
             <mat-radio-group formControlName="ativo" >
-                <mat-radio-button value="sim">
+                <mat-radio-button value="true">
                         Sim.
                 </mat-radio-button>
                 &nbsp;&nbsp;
-                <mat-radio-button value="nao">
+                <mat-radio-button false="nao">
                     Não.
                 </mat-radio-button>
             </mat-radio-group>
-            
+
     </form>
 </div>
 

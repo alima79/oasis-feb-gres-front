@@ -33,7 +33,7 @@ export class CriaralterarComponent implements OnInit {
               public dialogRef: MatDialogRef<ListarComponent>) { }
 
   ngOnInit(): void {
-    this.preencherFormulario();
+      this.preencherFormulario();
   }
 
   preencherFormulario(): void {
@@ -79,7 +79,7 @@ export class CriaralterarComponent implements OnInit {
     this.estadoCrudService.createExtraFromIReqEstado(this.criarObjectoEstado()).subscribe(
       success => {
         console.log('CRIADO ESTADO: sucesso: ' + success);
-        alert('Estado criado com Sucesso: ' + success);
+        //alert('Estado criado com Sucesso: ' + success);
 
         //fechar o dialog pop-up
         this.dialogRef.close();

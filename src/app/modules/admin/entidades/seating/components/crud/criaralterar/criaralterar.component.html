@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Criar um Novo RESTAURANTE</h1>
+<h1 mat-dialog-title>Criar um Novo SEATING</h1>
 
 <div mat-dialog-content>
     <form [formGroup]="formCriarAlterarSeating">
@@ -15,25 +15,28 @@
 
         <label for=""><h3>COMPLETO:</h3></label>
         <mat-radio-group formControlName="completo" >
-            <mat-radio-button value="sim">
+            <mat-radio-button value="true">
                     Sim.
             </mat-radio-button>
             &nbsp;&nbsp;
-            <mat-radio-button value="nao">
+            <mat-radio-button value="false">
                 Não.
             </mat-radio-button>
         </mat-radio-group>
         <br><br>    
         <label for=""><h3>ATIVO:</h3></label>
         <mat-radio-group formControlName="ativo" >
-            <mat-radio-button value="sim">
+            <mat-radio-button value="true">
                     Sim.
             </mat-radio-button>
             &nbsp;&nbsp;
-            <mat-radio-button value="nao">
+            <mat-radio-button value="false">
                 Não.
             </mat-radio-button>
         </mat-radio-group>
+        <label *ngIf="acao=='alterar'" for="dataCriacao" formControlName="dataCriacao">Data Criacao: </label>
+        <label *ngIf="acao=='alterar'" for="dataAtualizacao" formControlName="dataAtualizacao">  -   Data Atualizacao: </label>   
+
             
     </form>
 </div>

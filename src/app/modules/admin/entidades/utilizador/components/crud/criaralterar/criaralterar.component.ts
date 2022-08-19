@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IReqUtilizador } from '../../../interfaces/i-req-utilizador';
 import { UtilizadorCrudService } from '../../../services/utilizador-crud.service';
+import { ListarComponent } from '../listar/listar.component';
 
 @Component({
   selector: 'app-criaralterar',
@@ -13,56 +16,115 @@ import { UtilizadorCrudService } from '../../../services/utilizador-crud.service
 })
 export class CriaralterarComponent implements OnInit {
   
-  formCriarAlterarReserva !: FormGroup;
+  formCriarAlterarUtilizador !: FormGroup;
 
-  constructor(private utilizadorCrudService: UtilizadorCrudService) { }
+  acao = "criar";
+  requestCompleto= false;
+  submitted = false;
+  erroMsg?: string;
+  hasErroMsg: boolean = false;
+  constructor(private utilizadorCrudService: UtilizadorCrudService,
+              private route: ActivatedRoute,
+              private formBuilder: FormBuilder,
+              private router: Router,
+              public dialogRef: MatDialogRef<ListarComponent>
+    ) { }
 
   ngOnInit(): void {
-    
+    this.preencherFormulario();
+  }
+
+  preencherFormulario(): void {
+    //LER DADOS URL: SABER ID e ACCAO
+    this.route.params.subscribe((params: any) =>{
+      console.log(params);
+      const id = params['id'];
+      if(id){
+        this.preencherFormularioUpdate(id);
+      }else{
+        this.preencherFormularioCreate();
+      }
+    });
+  }
+
+  //CARREGAR FORM COM DADOS DE OBJECTO
+  preencherFormularioUpdate(id: number): void {
+    console.log('Preencher Formulario para Update Utilizador com ID:  ' + id);
+  }
+
+
+  //INCIALIZAR FORM COM DADOS PARA CRIAR
+  preencherFormularioCreate(): void {
+    this.acao="criar";
+    console.log("ACCAO: ", this.acao);
+    this.incializarFormEstado();
+  }
+
+   incializarFormEstado(): void {
+    this.formCriarAlterarUtilizador = this.formBuilder.group({
+      id: [null],
+      userName: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      password: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      confPassword: [null, [Validators.required]],
+      email: [null, [Validators.required]],      
+      ativo: [null, [Validators.required]],
+      dataCriacao: [null],
+      dataAtualizacao: [null]
+    });
   }
 
   addUtilizador(){
-    console.log("ADICIONAR UM EXTRA");
+    console.log("ADICIONAR UM UTILIZADOR");
 
     this.utilizadorCrudService.createUtilizadorFromIReqUtilizador(this.criarObjectoUtilizador()).subscribe(
       success => {
-        //this.hasErroMsg = false;
-        //this.msgSnackBar("ITEM criado");
-        console.log('CRIADO ITEM: sucesso: ' + success);
-        //this.router.navigate(['/oa-admin/gestao/entidades/item/listar']);
+        console.log('CRIADO Utilizador: sucesso: ' + success);
+        alert('UTILIZADOR criado com Sucesso: ' + success);
+
+        //fechar o dialog pop-up
+        this.dialogRef.close();
+
+        this.router.navigateByUrl('/', {skipLocationChange: true} ).then(() => {
+          this.router.navigate(['/oa-admin/gestao/entidades/utilizador/listar']);
+        });
       },
       error => {
-        //this.hasErroMsg = true;
-        let erroMsg = "CRIADO USER: Erro no Create USER \n"+error;
-        //this.requestCompleto = false;
-        //console.log(this.erroMsg);
-        //alert(erroMsg);
+        this.hasErroMsg = true;
+        this.erroMsg = "CRIADO UTILIZADOR: Erro no Create UTILIZADOR \n"+error;
+        this.requestCompleto = false;
+        console.log(this.erroMsg);
+        alert(this.erroMsg);
       },
 
       () => {
-        console.log('CRIAR USER: request completo');
-        //this.requestCompleto = true;
+        console.log('CRIAR UTILIZADOR: request completo');
+        this.requestCompleto = true;
       }
     );
   }
 
-  resetFields(){
-    this.formCriarAlterarReserva.reset();
-    alert('CLEAN FIELDS');
-  }
+  
 
   criarObjectoUtilizador(): IReqUtilizador{
-    console.log('CRIANDO OBJECTO UTLIZADOR......');
-    
+    console.log('CRIANDO OBJECTO UTLIZADOR......');    
     return {
-      "userName": "alima2",
-      "password": "aaaaaaa2",
-      "email": "aaaa21@gmail.com",
-
-      "ativo": true,
-      "dataCriacao": '2022-08-20T12:10:00',
-      "dataUltimaActualizacao": '2022-08-20T12:10:00'
+      "id": this.formCriarAlterarUtilizador?.value.id,
+      "userName": this.formCriarAlterarUtilizador?.value.userName,
+      "password": this.formCriarAlterarUtilizador?.value.password,
+      "email": this.formCriarAlterarUtilizador?.value.email,
+      "ativo": this.formCriarAlterarUtilizador?.value.ativo,
+      "dataCriacao": this.getSystemCurrentDateTime(),
+      "dataUltimaActualizacao": this.getSystemCurrentDateTime()
      }
+  }
+
+  getSystemCurrentDateTime(): string {
+    return '2022-08-18T20:10:00'
+  }
+
+  resetFields(){
+    this.formCriarAlterarUtilizador.reset();
+    alert('CLEAN FIELDS');
   }
 
 }

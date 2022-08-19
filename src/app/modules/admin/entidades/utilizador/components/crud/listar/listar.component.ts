@@ -60,10 +60,14 @@ export class ListarComponent implements OnInit {
     activo: [true]
   });
 
-  constructor(private formBuilder: FormBuilder, private utilizadorCrudService: UtilizadorCrudService) { }
+  constructor(private formBuilder: FormBuilder, private utilizadorCrudService: UtilizadorCrudService) { 
+    console.log('NO CONSTRUTOR LISTAR UTILIZADOR');
+  }
 
   ngOnInit(): void {
+    console.log('111111111111111111111111111111');
     this.readAll();
+    console.log('999999999999999999999999999999');
   }
 
   readAll(){

@@ -1,4 +1,5 @@
 export interface IReqCliente {
+    id: number,
     nome: string, 
     apelido: string, 
     email: string, 

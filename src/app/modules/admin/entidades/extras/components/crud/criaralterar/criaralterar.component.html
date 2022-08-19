@@ -15,15 +15,17 @@
             
         <label for=""><h3>ATIVO:</h3></label>
         <mat-radio-group formControlName="ativo" >
-            <mat-radio-button value="sim">
+            <mat-radio-button value="true">
                     Sim.
             </mat-radio-button>
             &nbsp;&nbsp;
-            <mat-radio-button value="nao">
+            <mat-radio-button value="false">
                 Não.
             </mat-radio-button>
         </mat-radio-group>
-            
+        
+        <label *ngIf="acao=='alterar'" for="dataCriacao" formControlName="dataCriacao">Data Criacao: </label>
+        <label *ngIf="acao=='alterar'" for="dataAtualizacao" formControlName="dataAtualizacao">  -   Data Atualizacao: </label>   
     </form>
 </div>
 
