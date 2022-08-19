@@ -10,6 +10,7 @@ import { CriaralterarComponent } from './components/crud/criaralterar/criaralter
 import { DetalheComponent } from './components/crud/detalhe/detalhe.component';
 import { HospedeComponent } from './hospede.component';
 import { HospedeRoutingModule } from './hospede-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -25,7 +26,9 @@ import { HospedeRoutingModule } from './hospede-routing.module';
     WebSharedModule,
     MaterialSharedModule,
     ComponentsSharedModule,
-    HospedeRoutingModule
+    HospedeRoutingModule,
+    FormsModule,
+    ReactiveFormsModule 
   ]
 })
 export class HospedeModule { }

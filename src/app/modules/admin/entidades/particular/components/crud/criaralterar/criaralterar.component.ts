@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IReqCliente } from '../../../../cliente/interfaces/i-req-cliente';
 import { ClienteCrudService } from '../../../../cliente/services/cliente-crud.service';
 import { IReqParticular } from '../../../../particular/interfaces/i-req-particular';
 import { ParticularCrudService } from '../../../../particular/services/particular-crud.service';
+import { ListarComponent } from '../listar/listar.component';
 
 @Component({
   selector: 'app-criaralterar',
@@ -14,53 +17,109 @@ import { ParticularCrudService } from '../../../../particular/services/particula
     ClienteCrudService
   ]
 })
+
 export class CriaralterarComponent implements OnInit {
 
   formCriarAlterarParticular!: FormGroup;
   criarCliente = true;
   requestCompleto = false;
   hasErroMsg = false;
+  //criarCliente = true;   
+  acao = "criar"; 
+  submitted = false;  
+  erroMsg?: string;
 
   constructor(private particularCrudService: ParticularCrudService,
-              private clienteCrudService: ClienteCrudService) { }
+              private clienteCrudService: ClienteCrudService,
+              private route: ActivatedRoute,
+              private formBuilder: FormBuilder,
+              private router: Router,
+              public dialogRef: MatDialogRef<ListarComponent>) { }
 
   ngOnInit(): void {
+    this.preencherFormulario();
   }
+
+  preencherFormulario(): void {
+    //LER DADOS URL: SABER ID e ACCAO
+    this.route.params.subscribe((params: any) =>{
+      console.log(params);
+      const id = params['id'];
+      if(id){
+        this.preencherFormularioUpdate(id);
+      }else{
+        this.preencherFormularioCreate();
+      }
+    });
+  }
+
+  //CARREGAR FORM COM DADOS DE OBJECTO
+  preencherFormularioUpdate(id: number): void {
+    console.log('Preencher Formulario para Update Particular com ID:  ' + id);
+  }
+
+
+  //INCIALIZAR FORM COM DADOS PARA CRIAR
+  preencherFormularioCreate(): void {
+    this.acao="criar";
+    console.log("ACCAO: ", this.acao);
+    this.incializarFormCliente();
+  }
+
+   incializarFormCliente(): void {
+    this.formCriarAlterarParticular = this.formBuilder.group({
+      id: [null],
+      tipoCliente: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      nomeCliente: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      apelidoCliente: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      email: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      telefone: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      ativo: [null, [Validators.required]],
+      dataCriacao: [null],
+      dataAtualizacao: [null],
+      // Particular
+      idParticular: [null],
+      observacaoPartb : [null, Validators.required],      
+    });
+  }
+
+
 
   addCliente(){
     console.log("ADICIONAR UM CLIENTE");
     console.log('Estou AQUI!!!!!');
-
-
-
     this.clienteCrudService.createClienteFromIReqCliente(this.criarObjectoCliente()).subscribe(
       (success: any) => {
-        //this.hasErroMsg = false;
+        this.hasErroMsg = false;
         //this.msgSnackBar("ITEM criado");
-        //console.log('CRIADO cliente: sucesso: ' + success);
-        //console.log('CRIADO cliente: sucesso: ' + success.nome);
+        console.log('CRIADO cliente: sucesso: ' + success);
+        console.log('CRIADO cliente: sucesso: ' + success.nome);
         console.log('CRIADO cliente com ID: ' + success.id + " sucesso");
         if(success.id){
           console.log("ID TEM QUALQUER COISA DIDERETENF DE NULL: " + success.id);
 
           let urlCliente = "http://localhost:8080/clientes/" + success.id;
-          console.log("URL CLIENTE INSERIDO!!!!!!  " + urlCliente);          
-          console.log('ADICIONAR HOSPEDE APOS ADICIONARR UM CLIENTE !!!!!!!!!!!!!');
-          this.addParticular(urlCliente);
+          console.log("URL CLIENTE INSERIDO!!!!!!  " + urlCliente);
+          
+          console.log('ADICIONAR Particular APOS ADICIONARR UM CLIENTE !!!!!!!!!!!!!');
+          this.addParticular(urlCliente);         
 
-         
-          //this.router.navigate(['/oa-admin/gestao/entidades/item/listar']);
+          //fechar o dialog pop-up
+          this.dialogRef.close();
+          this.router.navigateByUrl('/', {skipLocationChange: true} ).then(() => {
+            this.router.navigate(['/oa-admin/gestao/entidades/particular/listar']);
+          });
 
         } else {
           console.log('DEU BOOOOOOOOOOOOOOOOOOOOOOSTAAAAAAAAAAAAAAAAAA');
         }
       },
       error => {
-        //this.hasErroMsg = true;
-        let erroMsg = "CRIADO Cliente: Erro no Create Cliente \n"+error;
-        //this.requestCompleto = false;
-        //console.log(this.erroMsg);
-        alert(erroMsg);
+        this.hasErroMsg = true;
+        this.erroMsg = "CRIADO Cliente: Erro no Create Cliente \n"+error;
+        this.requestCompleto = false;
+        console.log(this.erroMsg);
+        alert(this.erroMsg);
       },
 
       () => {
@@ -77,36 +136,40 @@ export class CriaralterarComponent implements OnInit {
 
 
   addParticular(urlCliente: string){
-    console.log('Metodo para inseirir um HOSPEDE aops inserir um cliente....' + urlCliente);
+    console.log('Metodo para inseirir um Particular aops inserir um cliente....' + urlCliente);
 
     this.particularCrudService.createParticularFromIReqParticular(this.criarObjectoParticular(urlCliente)).subscribe(
       (success: any) => {
-        //this.hasErroMsg = false;
+        this.hasErroMsg = false;
         //this.msgSnackBar("ITEM criado");
-        //console.log('CRIADO cliente: sucesso: ' + success);
-        //console.log('CRIADO cliente: sucesso: ' + success.nome);
-        console.log('CRIADO Hospde com ID: ' + success.id + " sucesso");
+        console.log('CRIADO cliente: sucesso: ' + success);
+        console.log('CRIADO cliente: sucesso: ' + success.nome);
+        console.log('CRIADO cliente com ID: ' + success.id + " sucesso");
         if(success.id){
           console.log("ID TEM QUALQUER COISA DIDERETENF DE NULL: " + success.id);
-          alert("Registo Hospede inserido com SUCESSO!!!1");
 
-          //this.router.navigate(['/oa-admin/gestao/entidades/item/listar']);
+          let urlCliente = "http://localhost:8080/clientes/" + success.id;
+          console.log("URL CLIENTE INSERIDO!!!!!!  " + urlCliente);
+          
+          console.log('ADICIONAR Particular APOS ADICIONARR UM CLIENTE !!!!!!!!!!!!!');
+          this.addParticular(urlCliente);         
 
+          
         } else {
           console.log('DEU BOOOOOOOOOOOOOOOOOOOOOOSTAAAAAAAAAAAAAAAAAA');
         }
       },
       error => {
-        //this.hasErroMsg = true;
-        let erroMsg = "CRIADO hOSPEDE: Erro no Create HOSPEDE \n"+error;
-        //this.requestCompleto = false;
-        //console.log(this.erroMsg);
-        alert(erroMsg);
+        this.hasErroMsg = true;
+        this.erroMsg = "CRIADO PARTICULAR: Erro no Create PARTICULAR \n"+error;
+        this.requestCompleto = false;
+        console.log(this.erroMsg);
+        alert(this.erroMsg);
       },
 
       () => {
-        console.log('CRIAR hOSPEDE: request completo');
-        alert('CRIAR HOSPEDE: request completo');
+        console.log('CRIAR PARTICULAR: request completo');
+        alert('CRIAR PARTICULAR: request completo');
         this.requestCompleto = true;
       }
     );
@@ -117,16 +180,15 @@ export class CriaralterarComponent implements OnInit {
     console.log('CRIANDO OBJECTO Cliente......');
     
     return {
-      "id": 12,
-      "nome": "Ricardo1", 
-      "apelido": "Santos", 
-      "email": "restrela1@gmail.com",
-      "telefone": "5400014", 
-      "tipo": "particular",
-      
-      "ativo": true,
-      "dataCriacao": '2022-08-16T12:10:00',
-      "dataUltimaActualizacao": '2022-08-16T12:10:00'
+      "id": this.formCriarAlterarParticular?.value.id,
+      "nome": this.formCriarAlterarParticular?.value.nomeCliente, 
+      "apelido": this.formCriarAlterarParticular?.value.apelidoCliente, 
+      "email": this.formCriarAlterarParticular?.value.email,
+      "telefone": this.formCriarAlterarParticular?.value.telefone, 
+      "tipo": 'particular',      
+      "ativo": this.formCriarAlterarParticular?.value.ativo,
+      "dataCriacao": this.getSystemCurrentDateTime(),
+      "dataUltimaActualizacao": this.getSystemCurrentDateTime()      
      }
   }
 
@@ -134,8 +196,8 @@ export class CriaralterarComponent implements OnInit {
     console.log('CRIANDO OBJECTO PARTICULAR......');
     
     return {
-      "id": 9,
-      "observacao": "tenha cuidado com este cliente particular- versao 2",
+      "id": this.formCriarAlterarParticular?.value.idParticular,
+      "observacao": this.formCriarAlterarParticular?.value.observacaoPartb,
       "cliente": _url
      }
   }
@@ -143,6 +205,10 @@ export class CriaralterarComponent implements OnInit {
   resetFields(){
     this.formCriarAlterarParticular.reset();
     alert('CLEAN FIELDS');
+  }
+
+  getSystemCurrentDateTime(): string {
+    return '2022-08-30T20:10:00'
   }
 
 }
