@@ -1,4 +1,5 @@
 export interface IReqReserva {
+    id: number
     numeroAdulto: number, 
     numeroCrianca: number,
     dataReserva: string, 

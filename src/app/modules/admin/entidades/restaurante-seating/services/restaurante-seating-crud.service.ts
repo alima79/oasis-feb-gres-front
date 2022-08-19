@@ -28,7 +28,7 @@ export class RestauranteSeatingCrudService extends ApiCrudService<MRestauranteSe
       catchError(this.errorMgmt));
   }
 
-  createExtraFromIReqRestauranteSeating(record: any){
+  createRestauranteSeatingFromIReqRestauranteSeating(record: any){
     console.log('RESSEAT CRUD Service::::CRIAR RESSEAT!!!   ' + record);
     console.log('RESSEAT CRUD Service::::CRIAR RESSEAT!!!   ' + record.data);
     console.log('RESSEAT CRUD Service::::CRIAR RESSEAT!!!   ' + record.dataCriacao);

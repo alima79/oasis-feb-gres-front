@@ -6,18 +6,14 @@
         <mat-form-field appearance="outline">
             <mat-label>Restaurante</mat-label>
             <mat-select formControlName="restaurante" placeholder="restaurante">
-                <mat-option value="funana">Funana</mat-option>
-                <mat-option value="Pedra de Lume">Pedra de Lume</mat-option>
-                <mat-option value="Tabanca">Tabanca</mat-option>
+                <mat-option *ngFor="let rest of dataSourceRestaurante" [value]="rest.id">{{rest.nome}}</mat-option>                
             </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
             <mat-label>Seating</mat-label>
             <mat-select formControlName="seating" placeholder="seating">
-                <mat-option value="18h30 - 20h00">18h30 - 20h00</mat-option>
-                <mat-option value="20h30 - 22h00">20h30 - 22h00</mat-option>
-                <mat-option value="18h30 - 22h00">18h30 - 22h00</mat-option>
+                <mat-option *ngFor="let seat of dataSourceSeating" [value]="seat.id">{{seat.horaInicio}} - {{seat.horaFim}}</mat-option>
             </mat-select>
         </mat-form-field>
 
@@ -33,18 +29,18 @@
 
         <mat-form-field appearance="fill">
             <mat-label>MENUS:</mat-label>
-            <mat-select [formControl]="menuFormControl" multiple>
-              <mat-option *ngFor="let men of listaMenus" [value]="men">{{men}}</mat-option>
+            <mat-select formControlName="menu">
+              <mat-option *ngFor="let men of dataSourceMenu" [value]="men.id">{{men.nome}}</mat-option>
             </mat-select>
         </mat-form-field>
             
         <label for=""><h3>ATIVO:</h3></label>
         <mat-radio-group formControlName="ativo" >
-            <mat-radio-button value="sim">
+            <mat-radio-button value="true">
                     Sim.
             </mat-radio-button>
             &nbsp;&nbsp;
-            <mat-radio-button value="nao">
+            <mat-radio-button value="false">
                 Não.
             </mat-radio-button>
         </mat-radio-group>

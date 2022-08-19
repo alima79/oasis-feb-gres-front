@@ -1,4 +1,3 @@
-import { validateVerticalPosition } from '@angular/cdk/overlay';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IReqReserva } from '../../../interfaces/i-req-reserva';
@@ -17,7 +16,9 @@ export class CriaralterarComponent implements OnInit {
   formCriarAlterarReserva !: FormGroup;
 
   tipoCliente = '';
-
+  requestCompleto= false;
+  erroMsg?: string;
+  hasErroMsg: boolean = false;
   extraFormControl = new FormControl('');
   listaExtras: string[] = ["Extra 1", "Extra 2", "Extra 3", "Extra 4", "Extra 5"];
 
@@ -87,16 +88,16 @@ export class CriaralterarComponent implements OnInit {
         //this.router.navigate(['/oa-admin/gestao/entidades/item/listar']);
       },
       error => {
-        //this.hasErroMsg = true;
-        let erroMsg = "CRIADO ITEM: Erro no Create Item \n"+error;
-        //this.requestCompleto = false;
-        //console.log(this.erroMsg);
-        //alert(erroMsg);
+        this.hasErroMsg = true;
+        this.erroMsg = "CRIADO ITEM: Erro no Create Item \n"+error;
+        this.requestCompleto = false;
+        console.log(this.erroMsg);
+        alert(this.erroMsg);
       },
 
       () => {
         console.log('CRIAR ITEM: request completo');
-        //this.requestCompleto = true;
+        this.requestCompleto = true;
       }
     );
 
@@ -115,25 +116,26 @@ export class CriaralterarComponent implements OnInit {
   }
 
   criarObjectoReserva(): IReqReserva{
-    console.log('CRIANDO OBJECTO EXTRA......');
+    console.log('CRIANDO OBJECTO RESERVA......');
     
     return {
-      "numeroAdulto": 4, 
-      "numeroCrianca": 1,
-      "dataReserva": "2022-08-25", 
-      "observacoes": "dgfg fgdfg dfg dd", 
-      "comentarios": "tktkt t ttkt tkt tk",
+      "id": 5,
+      "numeroAdulto": 10, 
+      "numeroCrianca": 5,
+      "dataReserva": "2022-08-26", 
+      "observacoes": "teste com 3 extra", 
+      "comentarios": "teste com 3 extra",
       
-      "ativo": true,
-      "dataCriacao": '2022-08-16T12:10:00',
-      "dataUltimaActualizacao": '2022-08-16T12:10:00',
+      "ativo": false,
+      "dataCriacao": '2022-08-20T12:10:00',
+      "dataUltimaActualizacao": '2022-08-20T12:10:00',
 
       "estado": "http://localhost:8080/estados/1",
       "cliente": "http://localhost:8080/clientes/1",
       "utilizador": "http://localhost:8080/utilizadores/1",
       "pagamento": "http://localhost:8080/pagamentos/1",
       "restauranteSeating": "http://localhost:8080/restauranteSeating/1",
-      "extras": ["http://localhost:8080/extras/1"]
+      "extras": ["http://localhost:8080/extras/1", "http://localhost:8080/extras/2", "http://localhost:8080/extras/3"]
 
      }
   }

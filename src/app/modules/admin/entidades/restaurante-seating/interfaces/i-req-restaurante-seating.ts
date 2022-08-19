@@ -1,5 +1,5 @@
 export interface IReqRestauranteSeating {
-    //id: number,
+    id: number,
     data: string,
     lotacao: number,
     ativo: boolean,
