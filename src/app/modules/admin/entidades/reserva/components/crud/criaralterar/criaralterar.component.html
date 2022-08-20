@@ -6,18 +6,14 @@
             <mat-form-field appearance="outline">
                 <mat-label>Restaurante</mat-label>
                 <mat-select formControlName="restaurante" placeholder="restaurante">
-                    <mat-option value="funana">Funana</mat-option>
-                    <mat-option value="Pedra de Lume">Pedra de Lume</mat-option>
-                    <mat-option value="Tabanca">Tabanca</mat-option>
+                    <mat-option *ngFor="let rest of dataSourceRestaurante" [value]="rest.id">{{rest.nome}}</mat-option>                
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Seating</mat-label>
                 <mat-select formControlName="seating" placeholder="seating">
-                    <mat-option value="18h30 - 20h00">18h30 - 20h00</mat-option>
-                    <mat-option value="20h30 - 22h00">20h30 - 22h00</mat-option>
-                    <mat-option value="18h30 - 22h00    ">18h30 - 22h00</mat-option>
+                    <mat-option *ngFor="let seat of dataSourceSeating" [value]="seat.id">{{seat.horaInicio}} - {{seat.horaFim}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -152,30 +148,23 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Pagamento</mat-label>
                     <mat-select formControlName="pagamento" placeholder="pagamento">
-                        <mat-option value="cortesia">Cortesia</mat-option>
-                        <mat-option value="all_inclusive">All-Inclusive</mat-option>
-                        <mat-option value="por_pagar">Por Pagar</mat-option>
+                        <mat-option *ngFor="let pag of dataSourcePagamentos" [value]="pag.id">{{pag.tipo}}</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <!--       Pagamento-->
-
-
+                
                 <!--       Extras-->
                 <mat-form-field appearance="outline">
                     <mat-label>Estado</mat-label>
                     <mat-select formControlName="estado" placeholder="estado">
-                        <mat-option value="pendente">Pendente</mat-option>
-                        <mat-option value="confirmada">Confirmada</mat-option>
-                        <mat-option value="cancelada">Cancelada</mat-option>
-                        <mat-option value="check_in">Check-In</mat-option>
-                        <mat-option value="check_out">Check-Out</mat-option>
+                        <mat-option *ngFor="let est of dataSourceEstados" [value]="est.id">{{est.valor}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </mat-card>
+
             <mat-form-field appearance="fill">
                 <mat-label>EXTRAS:</mat-label>
                 <mat-select [formControl]="extraFormControl" multiple>
-                  <mat-option *ngFor="let ext of listaExtras" [value]="ext">{{ext}}</mat-option>
+                  <mat-option *ngFor="let ext of dataSourceExtras" [value]="ext.id">{{ext.nome}}</mat-option>
                 </mat-select>
             </mat-form-field>
 

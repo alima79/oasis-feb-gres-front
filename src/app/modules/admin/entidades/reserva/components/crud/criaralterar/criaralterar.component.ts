@@ -1,86 +1,349 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import { Sort } from '@angular/material/sort';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { IMyPages } from 'src/app/my-shared/interfaces-shared/i-my-pages';
+import { IEstado } from '../../../../estado/interfaces/i-estado';
+import { IResponsePageableEstado } from '../../../../estado/interfaces/i-response-pageable-estado';
+import { EstadoCrudService } from '../../../../estado/services/estado-crud.service';
+import { IExtras } from '../../../../extras/interfaces/i-extras';
+import { IResponsePageableExtras } from '../../../../extras/interfaces/i-response-pageable-extras';
+import { ExtrasCrudService } from '../../../../extras/services/extras-crud.service';
+import { IMenu } from '../../../../menu/interfaces/i-menu';
+import { MenuCrudService } from '../../../../menu/services/menu-crud.service';
+import { IPagamento } from '../../../../pagamento/interfaces/i-pagamento';
+import { IResponsePageablePagamento } from '../../../../pagamento/interfaces/i-response-pageable-pagamento';
+import { PagamentoCrudService } from '../../../../pagamento/services/pagamento-crud.service';
+import { IResponsePageableRestaurante } from '../../../../restaurante/interfaces/i-response-pageable-restaurante';
+import { IRestaurante } from '../../../../restaurante/interfaces/i-restaurante';
+import { RestauranteCrudService } from '../../../../restaurante/services/restaurante-crud.service';
+import { IResponsePageableSeating } from '../../../../seating/interfaces/i-response-pageable-seating';
+import { ISeating } from '../../../../seating/interfaces/i-seating';
+import { SeatingCrudService } from '../../../../seating/services/seating-crud.service';
 import { IReqReserva } from '../../../interfaces/i-req-reserva';
 import { ReservaCrudService } from '../../../services/reserva-crud.service';
+import { ListarComponent } from '../listar/listar.component';
 
 @Component({
   selector: 'app-criaralterar',
   templateUrl: './criaralterar.component.html',
   styleUrls: ['./criaralterar.component.scss'],
   providers: [
-    ReservaCrudService
+    ReservaCrudService,
+    RestauranteCrudService,
+    SeatingCrudService,
+    ExtrasCrudService,
+    PagamentoCrudService,
+    EstadoCrudService
   ]
 })
 export class CriaralterarComponent implements OnInit {
 
   formCriarAlterarReserva !: FormGroup;
-
+  acao = 'criar';
   tipoCliente = '';
   requestCompleto= false;
   erroMsg?: string;
   hasErroMsg: boolean = false;
   extraFormControl = new FormControl('');
-  listaExtras: string[] = ["Extra 1", "Extra 2", "Extra 3", "Extra 4", "Extra 5"];
+  //listaExtras: string[] = ["Extra 1", "Extra 2", "Extra 3", "Extra 4", "Extra 5"];
+  mypages?: IMyPages;
+  //PAGE_EVENT
+  pageEvent?: PageEvent;
+  //SORT_EVENT
+  sortEvent?: Sort;
+  sizeInicial: number =30;
+  sort: string ="id";
+  direccaoOrdem: string ="asc";
+
+  dataSourceRestaurante: IRestaurante[] = [];
+  dataSourceSeating: ISeating[] = [];
+  dataSourceEstados!: IEstado[];
+  dataSourceExtras!: IExtras[];
+  dataSourcePagamentos!: IPagamento[];
+
+  totalElements: number =0;
 
 
 
 
   constructor(private formBuilder: FormBuilder,
-              private reservaCrudService: ReservaCrudService) { }
+              private reservaCrudService: ReservaCrudService,
+              private restauranteCrudService: RestauranteCrudService,
+              private seatingCrudService: SeatingCrudService,
+              private extrasCrudService: ExtrasCrudService,
+              private pagamentoCrudService: PagamentoCrudService,
+              private estadoCrudService: EstadoCrudService,
+              private route: ActivatedRoute,
+              private router: Router,
+              public dialogRef: MatDialogRef<ListarComponent>) { }
 
   ngOnInit(): void {
-    this.formCriarAlterarReserva = this.formBuilder.group({
+    this.carregarRestaurantes();
+    console.log('RESTAURANTES----->' + JSON.stringify(this.dataSourceRestaurante));
 
-        restaurante : ['', Validators.required],
-        seating : ['', Validators.required],
-        dataReserva : ['', Validators.required],
-        estado : ['', Validators.required],
-        ativo : ['', Validators.required],
+    this.carregarSeatings();
+    console.log('SEATINGS----->' + JSON.stringify(this.dataSourceSeating));
 
-        //cliente related
-        tipoCliente : ['', Validators.required],
-        nomeCliente : ['', Validators.required],
-        apelidoCliente : ['', Validators.required],
-        email : ['', Validators.required],
-        telefone : ['', Validators.required],
+    this.carregarExtras();
+    console.log('EXTRAS----->' + JSON.stringify(this.dataSourceExtras));
 
+    this.carregarEstados();
+    console.log('ESTADOS----->' + JSON.stringify(this.dataSourceEstados));
 
-        // hospede
-        numeroQuarto : ['', Validators.required],
-        nacionalidade : ['', Validators.required],
-
-        //prticular
-        observacaoPartb : ['', Validators.required],
-
-        // grupo
-        instituicao : ['', Validators.required],
-        observacaoGrupo : ['', Validators.required],
-        descricaoGrupo : ['', Validators.required],
-
-        numAdultos : ['', Validators.required],
-        numCrianca : ['', Validators.required],
-        observacoes : ['',Validators.required],
-        comentarios : ['', Validators.required],
+    this.carregarPagamentos();
+    console.log('Pagamentos----->' + JSON.stringify(this.dataSourcePagamentos));
 
 
-        pagamento : ['', Validators.required],
+    this.preencherFormulario();
+  }
 
-        extras : ['', Validators.required],
-
-        user : ['', Validators.required],
-
-        menu : ['', Validators.required]
-
+  preencherFormulario() {
+    console.log("PREENCHER fORMULARIO");
+    //LER DADOS URL: SABER ID e ACCAO
+    this.route.params.subscribe((params: any) =>{
+      console.log(params);
+      const id = params['id'];
+      if(id){
+        this.preencherFormularioUpdate(id);
+      }else{
+        this.preencherFormularioCreate();
+      }
     });
   }
+
+  //CARREGAR FORM COM DADOS DE OBJECTO
+  preencherFormularioUpdate(id: number): void {
+    console.log('Preencher Formulario para Update Reserva com ID:  ' + id);
+  }
+
+
+  //INCIALIZAR FORM COM DADOS PARA CRIAR
+  preencherFormularioCreate(): void {
+    this.acao="criar";
+    console.log("ACCAO: ", this.acao);
+    this.incializarFormReserva();
+   }
+
+
+  incializarFormReserva() {
+    this.formCriarAlterarReserva = this.formBuilder.group({
+
+      restaurante : ['', Validators.required],
+      seating : ['', Validators.required],
+      dataReserva : ['', Validators.required],
+      estado : ['', Validators.required],
+      ativo : ['', Validators.required],
+
+      //cliente related
+      tipoCliente : ['', Validators.required],
+      nomeCliente : ['', Validators.required],
+      apelidoCliente : ['', Validators.required],
+      email : ['', Validators.required],
+      telefone : ['', Validators.required],
+
+
+      // hospede
+      numeroQuarto : ['', Validators.required],
+      nacionalidade : ['', Validators.required],
+
+      //prticular
+      observacaoPartb : ['', Validators.required],
+
+      // grupo
+      instituicao : ['', Validators.required],
+      observacaoGrupo : ['', Validators.required],
+      descricaoGrupo : ['', Validators.required],
+
+      numAdultos : ['', Validators.required],
+      numCrianca : ['', Validators.required],
+      observacoes : ['',Validators.required],
+      comentarios : ['', Validators.required],
+
+
+      pagamento : ['', Validators.required],
+
+      extras : ['', Validators.required],
+
+      user : ['', Validators.required],
+
+      menu : ['', Validators.required]
+
+  });
+  }
+
+
+  carregarPagamentos(): void {
+    console.log('CARREGAR LISTA DE PAGAMENTOS');
+    
+    let pageIndex = this.pageEvent? this.pageEvent.pageIndex: 0;
+    let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
+    
+    this.sort = this.sortEvent? this.sortEvent.active : "id";
+    this.direccaoOrdem = this.sortEvent? this.sortEvent.direction : "asc";
+
+    let myObservablePesquisa$: Observable<IResponsePageablePagamento>;
+
+    myObservablePesquisa$ = this.pagamentoCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
+
+    myObservablePesquisa$.subscribe(
+      (data: IResponsePageablePagamento) => {
+        this.dataSourcePagamentos = data._embedded.pagamentos;
+        this.mypages = data.page;
+        this.totalElements = this.mypages.totalElements;
+        console.log("Numero de Pagamentos lidos: " + this.totalElements);
+      },
+      error => {
+        this.erroMsg = error;
+        this.hasErroMsg = true;
+        console.error('ERROR: ', error);
+        this.dataSourcePagamentos = [];
+      },
+      () => { this.requestCompleto = true; }
+    );    
+  }
+
+
+
+  carregarEstados() {
+    console.log('CARREGAR LISTA DE ESTADOS');
+    
+    let pageIndex = this.pageEvent? this.pageEvent.pageIndex: 0;
+    let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
+    
+    this.sort = this.sortEvent? this.sortEvent.active : "id";
+    this.direccaoOrdem = this.sortEvent? this.sortEvent.direction : "asc";
+
+    let myObservablePesquisa$: Observable<IResponsePageableEstado>;
+
+    myObservablePesquisa$ = this.estadoCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
+
+    myObservablePesquisa$.subscribe(
+      (data: IResponsePageableEstado) => {
+        this.dataSourceEstados = data._embedded.estados;
+        this.mypages = data.page;
+        this.totalElements = this.mypages.totalElements;
+        console.log("Numero de Estados lidos: " + this.totalElements);
+      },
+      error => {
+        this.erroMsg = error;
+        this.hasErroMsg = true;
+        console.error('ERROR: ', error);
+        this.dataSourceEstados = [];
+      },
+      () => { this.requestCompleto = true; }
+    );
+  }
+
+
+
+
+  carregarExtras(): void {
+    console.log('CARREGAR LISTA DE EXTRAS');
+    
+    let pageIndex = this.pageEvent? this.pageEvent.pageIndex: 0;
+    let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
+    
+    this.sort = this.sortEvent? this.sortEvent.active : "id";
+    this.direccaoOrdem = this.sortEvent? this.sortEvent.direction : "asc";
+
+    let myObservablePesquisa$: Observable<IResponsePageableExtras>;
+
+    myObservablePesquisa$ = this.extrasCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
+
+    myObservablePesquisa$.subscribe(
+      (data: IResponsePageableExtras) => {
+        this.dataSourceExtras = data._embedded.extras;
+        this.mypages = data.page;
+        this.totalElements = this.mypages.totalElements;
+        console.log("Numero de EXTRAS lidos: " + this.totalElements);
+      },
+      error => {
+        this.erroMsg = error;
+        this.hasErroMsg = true;
+        console.error('ERROR: ', error);
+        this.dataSourceExtras = [];
+      },
+      () => { this.requestCompleto = true; }
+    );    
+  }
+
+  carregarSeatings(): void {
+    console.log('CARREGAR LISTA DE SEATINGS');
+    
+    let pageIndex = this.pageEvent? this.pageEvent.pageIndex: 0;
+    let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
+    
+    this.sort = this.sortEvent? this.sortEvent.active : "id";
+    this.direccaoOrdem = this.sortEvent? this.sortEvent.direction : "asc";
+
+    let myObservablePesquisa$: Observable<IResponsePageableSeating>;
+
+    myObservablePesquisa$ = this.seatingCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
+
+    myObservablePesquisa$.subscribe(
+      (data: IResponsePageableSeating) => {
+        this.dataSourceSeating = data._embedded.seatings;
+        this.mypages = data.page;
+        this.totalElements = this.mypages.totalElements;
+        console.log("Numero de SEATINGS lidos: " + this.totalElements);
+      },
+      error => {
+        this.erroMsg = error;
+        this.hasErroMsg = true;
+        console.error('ERROR: ', error);
+        this.dataSourceSeating = [];
+      },
+      () => { this.requestCompleto = true; }
+    );
+  }
+
+  
+  carregarRestaurantes() {
+    console.log('CARREGAR LISTA DE RESTAURANTES');
+    
+    let pageIndex = this.pageEvent? this.pageEvent.pageIndex: 0;
+    let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
+    
+    //SORT
+    this.sort = this.sortEvent? this.sortEvent.active : "id";
+    this.direccaoOrdem = this.sortEvent? this.sortEvent.direction : "asc";
+
+    let myObservablePesquisa$: Observable<IResponsePageableRestaurante>;
+
+    myObservablePesquisa$ = this.restauranteCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
+
+    myObservablePesquisa$.subscribe(
+      (data: IResponsePageableRestaurante) => {
+        console.log("DADOS" + data);
+        this.dataSourceRestaurante = data._embedded.restaurantes;
+        this.mypages = data.page;
+        this.totalElements = this.mypages.totalElements;
+        console.log("Numero de Restaurantes lidos: " + this.totalElements);
+      },
+      error => {
+        this.erroMsg = error;
+        this.hasErroMsg = true;
+        console.error('ERROR: ', error);
+        this.dataSourceRestaurante = [];
+      },
+      () => { this.requestCompleto = true; }
+    );
+  }
+
+
 
   addReserva(){
     console.log("ADICIONAR UMA RESERVA");
     console.log(this.formCriarAlterarReserva.value);
-    //console.log(this.formCriarAlterarReserva.controls['tipoCliente'].value);
+    console.log(this.formCriarAlterarReserva.controls['tipoCliente'].value);
     console.log(this.extraFormControl.value);
 
-    this.reservaCrudService.createReservaFromIReqReserva(this.criarObjectoReserva()).subscribe(
+    console.log("RESERVA: " + JSON.stringify(this.criarObjectoReserva()));
+    /*this.reservaCrudService.createReservaFromIReqReserva(this.criarObjectoReserva()).subscribe(
       success => {
         //this.hasErroMsg = false;
         //this.msgSnackBar("ITEM criado");
@@ -99,7 +362,7 @@ export class CriaralterarComponent implements OnInit {
         console.log('CRIAR ITEM: request completo');
         this.requestCompleto = true;
       }
-    );
+    );*/
 
 
   }
@@ -119,27 +382,29 @@ export class CriaralterarComponent implements OnInit {
     console.log('CRIANDO OBJECTO RESERVA......');
     
     return {
-      "id": 5,
-      "numeroAdulto": 10, 
-      "numeroCrianca": 5,
-      "dataReserva": "2022-08-26", 
-      "observacoes": "teste com 3 extra", 
-      "comentarios": "teste com 3 extra",
+      "id": this.formCriarAlterarReserva?.value.id,
+      "numeroAdulto": this.formCriarAlterarReserva?.value.numeroAdulto, 
+      "numeroCrianca": this.formCriarAlterarReserva?.value.numeroCrianca,
+      "dataReserva": this.formCriarAlterarReserva?.value.dataReserva, 
+      "observacoes": this.formCriarAlterarReserva?.value.observacoes, 
+      "comentarios": this.formCriarAlterarReserva?.value.comentarios,
       
-      "ativo": false,
-      "dataCriacao": '2022-08-20T12:10:00',
-      "dataUltimaActualizacao": '2022-08-20T12:10:00',
+      "ativo": this.formCriarAlterarReserva?.value.ativo,
+      "dataCriacao": this.getSystemCurrentDateTime(),
+      "dataUltimaActualizacao": this.getSystemCurrentDateTime(),
 
-      "estado": "http://localhost:8080/estados/1",
-      "cliente": "http://localhost:8080/clientes/1",
-      "utilizador": "http://localhost:8080/utilizadores/1",
-      "pagamento": "http://localhost:8080/pagamentos/1",
-      "restauranteSeating": "http://localhost:8080/restauranteSeating/1",
-      "extras": ["http://localhost:8080/extras/1", "http://localhost:8080/extras/2", "http://localhost:8080/extras/3"]
-
+      "estado": this.formCriarAlterarReserva?.value.estado,
+      "cliente": this.formCriarAlterarReserva?.value.cliente,
+      "utilizador": this.formCriarAlterarReserva?.value.utilizador,
+      "pagamento": this.formCriarAlterarReserva?.value.pagamento,
+      "restauranteSeating": this.formCriarAlterarReserva?.value.restauranteSeating,
+      //"extras": ["http://localhost:8080/extras/1", "http://localhost:8080/extras/2", "http://localhost:8080/extras/3"]
+      "extras": this.formCriarAlterarReserva?.value.extras
      }
   }
 
-
+  getSystemCurrentDateTime(): string {
+    return '2022-08-30T20:10:00'
+  }
 
 }
