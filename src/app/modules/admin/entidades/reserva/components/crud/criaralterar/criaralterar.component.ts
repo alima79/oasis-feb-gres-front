@@ -42,6 +42,8 @@ import { ListarComponent } from '../listar/listar.component';
 })
 export class CriaralterarComponent implements OnInit {
 
+  cliente = 12;
+  idUtilizador = 0;
   formCriarAlterarReserva !: FormGroup;
   acao = 'criar';
   tipoCliente = '';
@@ -82,6 +84,11 @@ export class CriaralterarComponent implements OnInit {
               public dialogRef: MatDialogRef<ListarComponent>) { }
 
   ngOnInit(): void {
+
+    
+    this.setCurrentUser();
+    console.log("UTILIZADOR -----> " + this.idUtilizador);
+
     this.carregarRestaurantes();
     console.log('RESTAURANTES----->' + JSON.stringify(this.dataSourceRestaurante));
 
@@ -99,6 +106,10 @@ export class CriaralterarComponent implements OnInit {
 
 
     this.preencherFormulario();
+  }
+  setCurrentUser(){
+    console.log("Atribui o ID Utilizador ligado no Sistema para fazer Reservas!!!!");
+    this.idUtilizador = 1;   
   }
 
   preencherFormulario() {
@@ -158,8 +169,8 @@ export class CriaralterarComponent implements OnInit {
       observacaoGrupo : ['', Validators.required],
       descricaoGrupo : ['', Validators.required],
 
-      numAdultos : ['', Validators.required],
-      numCrianca : ['', Validators.required],
+      numeroAdultos : ['', Validators.required],
+      numeroCrianca : ['', Validators.required],
       observacoes : ['',Validators.required],
       comentarios : ['', Validators.required],
 
@@ -169,8 +180,6 @@ export class CriaralterarComponent implements OnInit {
       extras : ['', Validators.required],
 
       user : ['', Validators.required],
-
-      menu : ['', Validators.required]
 
   });
   }
@@ -343,26 +352,32 @@ export class CriaralterarComponent implements OnInit {
     console.log(this.extraFormControl.value);
 
     console.log("RESERVA: " + JSON.stringify(this.criarObjectoReserva()));
-    /*this.reservaCrudService.createReservaFromIReqReserva(this.criarObjectoReserva()).subscribe(
+    
+    this.reservaCrudService.createReservaFromIReqReserva(this.criarObjectoReserva()).subscribe(
       success => {
-        //this.hasErroMsg = false;
-        //this.msgSnackBar("ITEM criado");
-        console.log('CRIADO ITEM: sucesso: ' + success);
-        //this.router.navigate(['/oa-admin/gestao/entidades/item/listar']);
+        console.log('CRIADO RESERVA: sucesso: ' + success);
+        alert('RESERVA criado com Sucesso: ' + success);
+
+        //fechar o dialog pop-up
+        this.dialogRef.close();
+
+        this.router.navigateByUrl('/', {skipLocationChange: true} ).then(() => {
+          this.router.navigate(['/oa-admin/gestao/entidades/reserva/listar']);
+        })
       },
       error => {
         this.hasErroMsg = true;
-        this.erroMsg = "CRIADO ITEM: Erro no Create Item \n"+error;
+        this.erroMsg = "CRIADO RESERVA: Erro no Create RESERVA \n"+error;
         this.requestCompleto = false;
         console.log(this.erroMsg);
         alert(this.erroMsg);
       },
 
       () => {
-        console.log('CRIAR ITEM: request completo');
+        console.log('CRIAR RESERVA: request completo');
         this.requestCompleto = true;
       }
-    );*/
+    );
 
 
   }
@@ -383,7 +398,7 @@ export class CriaralterarComponent implements OnInit {
     
     return {
       "id": this.formCriarAlterarReserva?.value.id,
-      "numeroAdulto": this.formCriarAlterarReserva?.value.numeroAdulto, 
+      "numeroAdulto": this.formCriarAlterarReserva?.value.numeroAdultos, 
       "numeroCrianca": this.formCriarAlterarReserva?.value.numeroCrianca,
       "dataReserva": this.formCriarAlterarReserva?.value.dataReserva, 
       "observacoes": this.formCriarAlterarReserva?.value.observacoes, 
@@ -393,17 +408,46 @@ export class CriaralterarComponent implements OnInit {
       "dataCriacao": this.getSystemCurrentDateTime(),
       "dataUltimaActualizacao": this.getSystemCurrentDateTime(),
 
-      "estado": this.formCriarAlterarReserva?.value.estado,
-      "cliente": this.formCriarAlterarReserva?.value.cliente,
-      "utilizador": this.formCriarAlterarReserva?.value.utilizador,
-      "pagamento": this.formCriarAlterarReserva?.value.pagamento,
-      "restauranteSeating": this.formCriarAlterarReserva?.value.restauranteSeating,
+      "estado": "http://localhost:8080/estado/" + this.formCriarAlterarReserva?.value.estado,
+
+      "cliente": "http://localhost:8080/clientes/" + this.cliente,
+
+      //este valor deve ser obtido da sessao do utilizador que estiver ligado no sistema
+      "utilizador": "http://localhost:8080/utilizadores/" + this.idUtilizador,
+      
+      "pagamento": "http://localhost:8080/pagamentos/" + this.formCriarAlterarReserva?.value.pagamento,
+      
+      
+      //este valor é obtido apartir da relacao Restasurante e Seating e data escolhidos escolhidos.
+      //mostrar no html as informacoes do Restarante Seating com info pertinentes (data, lotacao, numeor de reservas.....)
+      //restauranteSeating: this.formCriarAlterarReserva?.value.restauranteSeating,
+      restauranteSeating: "http://localhost:8080/restauranteSeating/1",      
+      
+      
       //"extras": ["http://localhost:8080/extras/1", "http://localhost:8080/extras/2", "http://localhost:8080/extras/3"]
-      "extras": this.formCriarAlterarReserva?.value.extras
+      //"extras": this.formCriarAlterarReserva?.value.extras
+      "extras": this.getExtrasURLList(this.formCriarAlterarReserva?.value.extras)
      }
+  }
+  getExtrasURLList(extras: string[]): string[] {
+    let urlList: string[];
+    urlList = extras;
+    let cont= 0;
+
+    //console.log('Dentro de getExtrasURLList!!!!! ---> ' + extras);
+    extras.forEach(ext =>{
+      //ext = 'http://localhost:8080/extras/' + ext;
+      //console.log('URL----> ' + ext);
+      urlList[cont] = 'http://localhost:8080/extras/' + ext;
+      cont++;
+      
+    });
+    //console.log("Novo EXTRAS:::: " + urlList);
+    return urlList;
   }
 
   getSystemCurrentDateTime(): string {
+    
     return '2022-08-30T20:10:00'
   }
 

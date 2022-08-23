@@ -136,12 +136,12 @@
             <mat-card>
                 <mat-form-field appearance="outline">
                     <mat-label>Adultos</mat-label>
-                    <input formControlName="numAdultos" matInput type="number" placeholder="numero">
+                    <input formControlName="numeroAdultos" matInput type="number" placeholder="numero">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Crianças</mat-label>
-                    <input formControlName="numCrianca" matInput type="number" placeholder="numero">
+                    <input formControlName="numeroCrianca" matInput type="number" placeholder="numero">
                 </mat-form-field>
 
                 <!--       Pagamento-->
@@ -163,7 +163,7 @@
 
             <mat-form-field appearance="fill">
                 <mat-label>EXTRAS:</mat-label>
-                <mat-select [formControl]="extraFormControl" multiple>
+                <mat-select formControlName="extras" multiple>
                   <mat-option *ngFor="let ext of dataSourceExtras" [value]="ext.id">{{ext.nome}}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -184,7 +184,7 @@
                         Sim.
                 </mat-radio-button>
                 &nbsp;&nbsp;
-                <mat-radio-button false="nao">
+                <mat-radio-button value="false">
                     Não.
                 </mat-radio-button>
             </mat-radio-group>
