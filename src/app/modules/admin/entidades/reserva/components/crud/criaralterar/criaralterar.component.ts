@@ -440,6 +440,7 @@ export class CriaralterarComponent implements OnInit {
       //console.log('URL----> ' + ext);
       urlList[cont] = 'http://localhost:8080/extras/' + ext;
       cont++;
+      this.reservaCrudService.getAPIURL()
       
     });
     //console.log("Novo EXTRAS:::: " + urlList);
