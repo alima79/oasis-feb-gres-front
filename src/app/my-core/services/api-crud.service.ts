@@ -12,17 +12,11 @@ const httpOptions = {
   })
 };
 
-
-
-
 @Injectable({
   providedIn: 'root'
 })
 export class ApiCrudService<T> {
-
-
   headers = new HttpHeaders().set('Content-Type', 'application/json').set('Access-Control-Allow-Origin','*');
-
   private  API_URL: String;
 
   get getheaders(): any {
@@ -33,12 +27,9 @@ export class ApiCrudService<T> {
     return this.API_URL;
   }
 
-
   constructor(protected  http: HttpClient, private URI: String) {
         this.API_URL = environment.API+URI;
-        //console.log("API_URL: "+this.API_URL);
-    }
-
+  }
 
   // Create
   createData(record: T) {
