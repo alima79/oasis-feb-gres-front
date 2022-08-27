@@ -1,4 +1,6 @@
-<h1 mat-dialog-title>Criar um Novo ESTADO</h1>
+<h1 mat-dialog-title *ngIf="acao=='criar'">CRIAR ESTADO</h1>
+<h1 mat-dialog-title *ngIf="acao=='editar'">EDITAR ESTADO</h1>
+<h1 mat-dialog-title *ngIf="acao=='ver'">DETALHES ESTADO</h1>
 
 <div mat-dialog-content>
     <form [formGroup]="formCriarAlterarEstado">
@@ -15,11 +17,11 @@
         
         <label for=""><h3>ATIVO:</h3></label>
         <mat-radio-group formControlName="ativo" >
-            <mat-radio-button value="true">
+            <mat-radio-button value="true" [checked]="ativarS">
                     Sim.
             </mat-radio-button>
             &nbsp;&nbsp;
-            <mat-radio-button value="false">
+            <mat-radio-button value="false" [checked]="ativarN">
                 Não.
             </mat-radio-button>
         </mat-radio-group>
@@ -31,8 +33,10 @@
 </div>
 
 <div mat-dialog-actions>
-    <button mat-raised-button color="primary" style="margin-left: 8px;" (click)="addEstado()">Guardar</button>
-    <button mat-raised-button color="secondary" style="margin-left: 8px;" (click)="resetFields()">Limpar</button>
+    <button *ngIf="acao=='criar'" mat-raised-button color="primary" style="margin-left: 8px;" (click)="addEstado()">Criar</button>
+    <button *ngIf="acao=='editar'" mat-raised-button color="primary" style="margin-left: 8px;" (click)="editEstado()">Guardar</button>
+    <button *ngIf="acao=='ver'" mat-raised-button color="primary" style="margin-left: 8px;" (click)="ativarControlos()">Editar</button>
+    <button *ngIf="acao!='ver'" mat-raised-button color="secondary" style="margin-left: 8px;" (click)="resetFields()">Limpar</button>
     <button mat-raised-button color="warn" style="margin-left: 8px;" mat-dialog-close>Cancelar</button>
 </div>
 

@@ -3,6 +3,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map, take, tap, delay } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment.prod';
+import { MEstado } from 'src/app/modules/admin/entidades/estado/models/m-estado';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -75,7 +76,22 @@ export class ApiCrudService<T> {
 
 
   // Update Data
-  updateData(id: number, record: T): Observable<T> {
+  updateData(id: number, record: MEstado): Observable<T> {
+    
+    console.log("Estado CRUD Service||||||||||||||||||||||||||");
+    console.log("ID Recebido: " + id);
+
+    console.log("Informacao do Estado a Actualizar::::::::::::");
+    console.log("VALOR: " + record.valor);
+    console.log("DESCRICAO: " + record.descricao);
+    console.log("ATIVO: " + record.ativo);
+    console.log("DATA CRIACAO: " + record.dataCriacao);
+    console.log("DATA ATUALIZACAO: " + record.dataUltimaActualizacao);
+
+
+    
+    
+    
     let url = `${this.API_URL}/${id}`;
     return this.http.put<T>(url, record, { headers: this.headers }).pipe(
       take(1),

@@ -15,20 +15,14 @@ export class MainMenuComponent implements OnInit {
   ngOnInit(): void {}
 
   openDialog() {
-    console.log("Metodo para Criar Utilizador");
     const dialogRef = this.dialog.open(CriaralterarComponent, {
-        width: '30%'
+      width: '60%'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+    dialogRef.afterClosed().subscribe(result => {});
   }
 
   navegarParaListarConjunto(){
-    //console.log("Metodo para Listar Utilizador");
     this.router.navigate(["./oa-admin/gestao/entidades/utilizador/listar"])
   }
-
-
 }

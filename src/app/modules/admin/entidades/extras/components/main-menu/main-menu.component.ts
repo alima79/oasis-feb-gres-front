@@ -15,23 +15,14 @@ export class MainMenuComponent implements OnInit {
   ngOnInit(): void {}
 
   openDialog() {
-    console.log("Metodo para Criar extras");
     const dialogRef = this.dialog.open(CriaralterarComponent, {
-        width: '30%'
+      width: '60%'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-
-    console.log('gggggggggggggggggggggggg');
+    dialogRef.afterClosed().subscribe(result => {});
   }
 
   navegarParaListarConjunto(){
-    console.log("Metodo para Listar extras");
     this.router.navigate(["./oa-admin/gestao/entidades/extras/listar"])
   }
-
-
 }
-

@@ -1,12 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog} from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IMyPages } from 'src/app/my-shared/interfaces-shared/i-my-pages';
 import { IEstado } from '../../../interfaces/i-estado';
 import { IResponsePageableEstado } from '../../../interfaces/i-response-pageable-estado';
 import { EstadoCrudService } from '../../../services/estado-crud.service';
+import { ApagarComponent } from '../apagar/apagar.component';
+import { CriaralterarComponent } from '../criaralterar/criaralterar.component';
+
 
 @Component({
   selector: 'app-listar',
@@ -20,26 +25,18 @@ export class ListarComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'valor','descricao', 'ativo', 'acoes'];
   dataSource: IEstado[] = [];
-
   erroMsg?: string;
   haErroMsg: boolean = false;
   requestCompleto = false;
-
   carregando: boolean = false;
-
   //PAGINAÇÃO
   mypages?: IMyPages;
-
-
   totalElements: number =0;
   sizeInicial: number =3;
   sort: string ="valor";
   direccaoOrdem: string ="asc";
-
   pageSizeOptions: number[] = [1, 2, 5, 10];
-
   pageEvent?: PageEvent;
-
   sortEvent?: Sort;  
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {
@@ -49,32 +46,28 @@ export class ListarComponent implements OnInit {
   }
 
   submitted = false;
-
   formPesquisa: FormGroup = this.formBuilder.group({
     nome: [null],
     activo: [true]
   });
 
-  constructor(private formBuilder: FormBuilder, private estadoCrudService: EstadoCrudService
-  ) { }
+  constructor(private formBuilder: FormBuilder, 
+              private estadoCrudService: EstadoCrudService,
+              private router: Router, 
+              private dialog : MatDialog) { }
 
-  ngOnInit(): void {
-    
+  ngOnInit(): void {    
     this.readAll();
   }
 
   readAll(){
     this.carregando = true;
     let pageIndex = this.pageEvent? this.pageEvent.pageIndex: 0;
-    let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
-    
+    let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;    
     this.sort = this.sortEvent? this.sortEvent.active : "valor";
     this.direccaoOrdem = this.sortEvent? this.sortEvent.direction : "asc";
-
     let myObservablePesquisa$: Observable<IResponsePageableEstado>;
-
     myObservablePesquisa$ = this.estadoCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
-
     myObservablePesquisa$.subscribe(
       (data: IResponsePageableEstado) => {
         this.dataSource = data._embedded.estados;
@@ -88,8 +81,7 @@ export class ListarComponent implements OnInit {
         console.error('ERROR: ', error);
       },
       () => { this.requestCompleto = true; }
-    );
-    
+    );    
   }
 
   onSubmit() {
@@ -100,6 +92,32 @@ export class ListarComponent implements OnInit {
   limparPesquisa() {
     this.submitted = false;
     this.formPesquisa.reset();
+  }
+
+  openDialog(acaoEstado: string, dados: IEstado): void{
+    const dialogRef = this.dialog.open(CriaralterarComponent,  {
+                                        width: '60%',
+                                        data: {
+                                          acao: acaoEstado,
+                                          estado: dados,
+                                        }
+                      });    
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`)
+    });
+  }
+
+  apagarReserva(id: any): void{
+    console.log("ABRIR COMPONENTE CRIARALTERAR PARA APAGAR---->");
+    console.log("Metodo para Apagar um ESTADO");
+
+    console.log("ID == " + id);
+
+    const dialogRef = this.dialog.open(ApagarComponent, {width: '60%'});    
+    
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`)
+    });
   }
 
 }

@@ -17,7 +17,7 @@ export class MainMenuComponent implements OnInit {
   openDialog() {
     console.log("Metodo para Criar Cliente");
     const dialogRef = this.dialog.open(CriaralterarComponent, {
-        width: '30%'
+      width: '60%'
     });
 
     dialogRef.afterClosed().subscribe(result => {

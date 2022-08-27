@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { IEstado } from '../../interfaces/i-estado';
 import { CriaralterarComponent } from '../crud/criaralterar/criaralterar.component';
 
 @Component({
@@ -14,12 +15,18 @@ export class MainMenuComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  openDialog() {
+  openDialog(acaoEstado: string) {
     console.log("Metodo para Criar Estado");
+    let dados!: IEstado;
+    
     const dialogRef = this.dialog.open(CriaralterarComponent, {
-        width: '30%'
-    });
-
+                                       width: '60%',
+                                       data: {
+                                            acao: acaoEstado,
+                                            //id: idEstado,
+                                            estado: dados,
+                                       }
+                      });
     
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`)
@@ -31,6 +38,5 @@ export class MainMenuComponent implements OnInit {
     console.log("Metodo para Listar Estado");
     this.router.navigate(["./oa-admin/gestao/entidades/estado/listar"])
   }
-
 
 }
