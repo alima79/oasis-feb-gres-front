@@ -53,7 +53,6 @@ export class ListarComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, 
               private estadoCrudService: EstadoCrudService,
-              private router: Router, 
               private dialog : MatDialog) { }
 
   ngOnInit(): void {    
@@ -107,13 +106,17 @@ export class ListarComponent implements OnInit {
     });
   }
 
-  apagarReserva(id: any): void{
+  apagarReserva(idE: number): void{
     console.log("ABRIR COMPONENTE CRIARALTERAR PARA APAGAR---->");
     console.log("Metodo para Apagar um ESTADO");
-
-    console.log("ID == " + id);
-
-    const dialogRef = this.dialog.open(ApagarComponent, {width: '60%'});    
+    console.log("ID == " + idE);
+    const dialogRef = this.dialog.open(ApagarComponent, {
+                                        width: '40%',
+                                        height: '40%',
+                                        data: {
+                                          id: idE
+                                        }
+    });    
     
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`)

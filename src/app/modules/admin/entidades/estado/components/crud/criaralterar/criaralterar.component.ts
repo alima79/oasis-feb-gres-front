@@ -27,15 +27,12 @@ export class CriaralterarComponent implements OnInit {
   acao = "criar";
   ativarS = false;
   ativarN = false;
-
   formCriarAlterarEstado!: FormGroup;
   requestCompleto= false;
   submitted = false;
   erroMsg?: string;
   hasErroMsg: boolean = false;
-
   estado!: IEstado;
-
 
   constructor(private estadoCrudService: EstadoCrudService,
               private route: ActivatedRoute,
@@ -45,49 +42,18 @@ export class CriaralterarComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: Parametros) { }
 
   ngOnInit(): void {
-      console.log("============ CRIAR ALTERAR COMPONENT----> ACAO = " + this.data.acao);
-      //console.log("============ CRIAR ALTERAR COMPONENT----> ID ESTADO = " + this.data.id);
       this.acao = this.data.acao;
-      //this.idEstado = this.data.id;
-
-      this.estado = this.data.estado;
-      /*if(this.acao != 'criar'){
-          console.log("");
-      }*/
-      /*console.log('***********************************************************');
-      console.log("ESTADO ID == " +this.estado.id);
-      console.log("ESTADO Valor == " +this.estado.valor);
-      console.log("ESTADO Descricao == " +this.estado.descricao);
-      console.log("ESTADO Ativo == " +this.estado.ativo);
-      console.log("ESTADO Data Criacao == " +this.estado.dataCriacao);
-      console.log("ESTADO Data Atualizacao == " +this.estado.dataUltimaActualizacao);
-      console.log('***********************************************************');*/
-    
-
+      this.estado = this.data.estado;      
       this.preencherFormulario();
   }
 
   preencherFormulario(): void {
-    //LER DADOS URL: SABER ID e ACCAO
-    /*this.route.params.subscribe((params: any) =>{
-      console.log(params);
-      const id = params['id'];
-      if(id){
-        this.preencherFormularioUpdate(id);
-      }else{
-        this.preencherFormularioCreate();
-      }
-    });*/
-
     if(this.acao == 'editar' || this.acao == 'ver'){
       this.preencherFormularioUpdate();
-    }
-    
+    }    
     if(this.acao == 'criar'){
       this.preencherFormularioCreate();
-    }
-
-    
+    }    
   }
 
   //CARREGAR FORM COM DADOS DE OBJECTO
@@ -127,7 +93,7 @@ export class CriaralterarComponent implements OnInit {
   //INCIALIZAR FORM COM DADOS PARA CRIAR
   preencherFormularioCreate(): void {
     this.acao="criar";
-    console.log("ACCAO: ", this.acao);
+     console.log("ACCAO: ", this.acao);
     this.incializarFormEstado();
   }
 
@@ -137,6 +103,7 @@ export class CriaralterarComponent implements OnInit {
       valor: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
       descricao: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
       ativo: [null, [Validators.required]],
+
       dataCriacao: [null],
       dataAtualizacao: [null]
     });
@@ -177,7 +144,8 @@ export class CriaralterarComponent implements OnInit {
       "valor": this.formCriarAlterarEstado?.value.valor,
       "descricao": this.formCriarAlterarEstado?.value.descricao,
       "ativo": this.formCriarAlterarEstado?.value.ativo,
-      "dataCriacao": this.getSystemCurrentDateTime(),
+
+      "dataCriacao": this.formCriarAlterarEstado?.value.dataCriacao,
       "dataUltimaActualizacao": this.getSystemCurrentDateTime()
      }
   }
@@ -188,71 +156,64 @@ export class CriaralterarComponent implements OnInit {
 
   resetFields(): void{
     this.formCriarAlterarEstado.reset();
-    alert('CLEAN FIELDS');
+    alert('OS CAMPOS FORAM LIMPOS');
   }
 
   editEstado(): void{
     console.log('EDITANDO ESTADO..........GUARDAR NA BD!!!!!');
+    
+    
+    console.log("**************************** ESTADO Original ----> \n" + this.mostrarEstado(this.estado))
+    
+    console.log('-------------------------------------------------------------------------------------');
 
-    //guardar os dados do formulario num novo objecto estado (IEstado)
-    //verificar se os contolos forem alterados (atributo dirty)
-    //comparar o novo objecto estado lido do formulario com o objecto Estado recebido
-    //se forem iguais, lancar um alert a dizer que os dados nao foram alterados e nao fazer a alteracao
-    //se forem diferente é porque os dados foram alterados por isso chamar o metodo do servico para fazer o updaTE
     let novoEstado = this.obterDadosForm();
-    console.log("****************************ESTADO Original----> \n" + this.mostrarEstado(this.estado))
-    console.log('****************************------------------------------------------------------');
-    console.log("****************************Novo ESTADO----> \n" + this.mostrarEstado(novoEstado));
+    console.log("**************************** NOVO ESTADO ----> \n" + this.mostrarEstado(novoEstado));
 
-    if(this.compararEstados(this.estado, novoEstado)){
-        console.log("NENHUMA ALTERACAO FOI REALIZADA - NAO ACTUALIZAR");
+    if(!this.compararEstados(this.estado, novoEstado)){
+        console.log("OS DADOS DO ESTADO ORIGINAL FORAM ALTERADOS - ACTUALIZAR NA BASE DE DADOS");
+        let est= new MEstado();
+        est.id = novoEstado.id;
+        est.valor = novoEstado.valor;
+        est.descricao = novoEstado.descricao;
+        est.ativo = novoEstado.ativo;
+        est.dataCriacao = novoEstado.dataCriacao;
+        est.dataUltimaActualizacao = this.getSystemCurrentDateTime();
+
+        this.estadoCrudService.updateData(est.id, est).subscribe(
+          success => {
+            console.log('OPERACAO:: EDITAR ESTADO: SUCESSO: \n' + success);          
+            //fechar o dialog pop-up
+            this.dialogRef.close();  
+            this.router.navigateByUrl('/', {skipLocationChange: true} ).then(() => {
+              this.router.navigate(['/oa-admin/gestao/entidades/estado/listar']);
+            });
+          },
+          error => {
+            this.hasErroMsg = true;
+            this.erroMsg = "OPERACAO:: EDITAR ESTADO: ERRO: \n" + error;
+            this.requestCompleto = false;
+            console.log(this.erroMsg);
+            alert(this.erroMsg);
+          },
+          () => {
+            console.log('OPERACAO:: EDITAR ESTADO: PEDIDO COMPLETO');
+            this.requestCompleto = true;
+          }
+        );
+
     } else {
-      console.log("OS DADOS DO ESTADO ORIGINAL FORAM ALTERADOS - ACTUALIZAR NA BASE DE DADOS");
-      let est= new MEstado();
-      est.id = novoEstado.id;
-      est.valor = novoEstado.valor;
-      est.descricao = novoEstado.descricao;
-      est.ativo = novoEstado.ativo;
-      est.dataCriacao = novoEstado.dataCriacao;
-      est.dataUltimaActualizacao = this.getSystemCurrentDateTime();
-
-      this.estadoCrudService.updateData(est.id, est).subscribe(
-        success => {
-          console.log('OPERACAO:: EDITAR ESTADO: SUCESSO: \n' + success);
-          
-          //fechar o dialog pop-up
-          this.dialogRef.close();
-  
-          this.router.navigateByUrl('/', {skipLocationChange: true} ).then(() => {
-            this.router.navigate(['/oa-admin/gestao/entidades/estado/listar']);
-          });
-        },
-        error => {
-          this.hasErroMsg = true;
-          this.erroMsg = "OPERACAO:: EDITAR ESTADO: ERRO: \n" + error;
-          this.requestCompleto = false;
-          console.log(this.erroMsg);
-          alert(this.erroMsg);
-        },
-        () => {
-          console.log('OPERACAO:: EDITAR ESTADO: PEDIDO COMPLETO');
-          this.requestCompleto = true;
-        }
-      );
+        console.log("NENHUMA ALTERACAO FOI REALIZADA - NAO ACTUALIZAR");
     }  
+
   }
 
   compararEstados(estado: IEstado, novoEstado: IEstado): boolean {
-    console.log('comparando estados');
-
     if(estado.ativo==novoEstado.ativo && 
        estado.descricao== novoEstado.descricao && 
        estado.valor== novoEstado.valor){
-      console.log("Todos os atributos sao iguais");
-      return true;
-      
+      return true;      
     } else{
-      console.log("ALGUM ATRIBUTOS FOI ALTERADO");
       return false;
     }
   }
@@ -272,7 +233,6 @@ export class CriaralterarComponent implements OnInit {
     console.log('Ler dados do formulario editar');
     return{
       "id": this.estado.id,
-
       "valor": this.formCriarAlterarEstado?.value.valor,
       "descricao": this.formCriarAlterarEstado?.value.descricao,
       "ativo": this.formCriarAlterarEstado?.value.ativo,
@@ -282,23 +242,17 @@ export class CriaralterarComponent implements OnInit {
      }
   }
 
-  ativarControlos(): void{
-    console.log('ATIVAR OS CONTROLOS DO FORMULARIO PARA EDITAR');
-
-    console.log('Acao passou para editar!!!!');
+  ativarControlos(): void{    
     this.acao = "editar";
-    console.log("ACAO ==== " + this.acao);
-
     this.formCriarAlterarEstado.get('valor')?.enable();
     this.formCriarAlterarEstado.get('descricao')?.enable();
     this.formCriarAlterarEstado.get('ativo')?.enable();
   }
 
-  disalbleAllControls(): void {
-    console.log('DESABLE ALL CONTROLS......');
-    //this.myForm.get('Personal.FIRST_NAME').disable();
+  disalbleAllControls(): void{
     this.formCriarAlterarEstado.get('valor')?.disable();
     this.formCriarAlterarEstado.get('descricao')?.disable();
     this.formCriarAlterarEstado.get('ativo')?.disable();
   }
+
 }

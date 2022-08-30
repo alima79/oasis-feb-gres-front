@@ -101,7 +101,6 @@ export class ApiCrudService<T> {
 
   // Delete Data
   deleteData(id: number): Observable<void> {
-
     const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
     const requestOptions: Object = {
       headers: headers,
