@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog} from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IMyPages } from 'src/app/my-shared/interfaces-shared/i-my-pages';
 import { IEstado } from '../../../interfaces/i-estado';
@@ -29,7 +28,7 @@ export class ListarComponent implements OnInit {
   haErroMsg: boolean = false;
   requestCompleto = false;
   carregando: boolean = false;
-  //PAGINAÇÃO
+  
   mypages?: IMyPages;
   totalElements: number =0;
   sizeInicial: number =3;
@@ -39,18 +38,19 @@ export class ListarComponent implements OnInit {
   pageEvent?: PageEvent;
   sortEvent?: Sort;  
 
-  setPageSizeOptions(setPageSizeOptionsInput: string) {
-    if (setPageSizeOptionsInput) {
-      this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
-    }
-  }
-
   submitted = false;
   formPesquisa: FormGroup = this.formBuilder.group({
     nome: [null],
     activo: [true]
   });
 
+  setPageSizeOptions(setPageSizeOptionsInput: string) {
+    if (setPageSizeOptionsInput) {
+      this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
+    }
+  }
+
+  
   constructor(private formBuilder: FormBuilder, 
               private estadoCrudService: EstadoCrudService,
               private dialog : MatDialog) { }
@@ -102,14 +102,14 @@ export class ListarComponent implements OnInit {
                                         }
                       });    
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`)
+      //console.log(`Dialog result: ${result}`)
     });
   }
 
-  apagarReserva(idE: number): void{
-    console.log("ABRIR COMPONENTE CRIARALTERAR PARA APAGAR---->");
-    console.log("Metodo para Apagar um ESTADO");
-    console.log("ID == " + idE);
+  apagarEstado(idE: number): void{
+    //console.log("ABRIR COMPONENTE CRIARALTERAR PARA APAGAR---->");
+    //console.log("Metodo para Apagar um ESTADO");
+    //console.log("ID == " + idE);
     const dialogRef = this.dialog.open(ApagarComponent, {
                                         width: '40%',
                                         height: '40%',
@@ -119,7 +119,7 @@ export class ListarComponent implements OnInit {
     });    
     
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`)
+      //console.log(`Dialog result: ${result}`)
     });
   }
 

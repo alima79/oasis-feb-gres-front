@@ -10,7 +10,6 @@ import { EstadoCrudService } from '../../../services/estado-crud.service';
 
 export interface Parametros {
   acao: 'criar' | 'ver' | 'editar';
-  //id: number;
   estado: IEstado;
 }
 
@@ -145,13 +144,19 @@ export class CriaralterarComponent implements OnInit {
       "descricao": this.formCriarAlterarEstado?.value.descricao,
       "ativo": this.formCriarAlterarEstado?.value.ativo,
 
-      "dataCriacao": this.formCriarAlterarEstado?.value.dataCriacao,
-      "dataUltimaActualizacao": this.getSystemCurrentDateTime()
+      "dataCriacao": this.getDataCriacao(),
+      "dataUltimaActualizacao": this.getDataActualizacao()
      }
   }
 
-  getSystemCurrentDateTime(): string {
-    return '2022-08-30T20:10:00'
+  //passado ou presente
+  getDataCriacao(): string {
+    return '2022-08-30T12:10:00'
+  }
+
+  //futoro ou presente
+  getDataActualizacao(): string {
+    return '2022-08-30T23:10:00'
   }
 
   resetFields(): void{
@@ -178,7 +183,7 @@ export class CriaralterarComponent implements OnInit {
         est.descricao = novoEstado.descricao;
         est.ativo = novoEstado.ativo;
         est.dataCriacao = novoEstado.dataCriacao;
-        est.dataUltimaActualizacao = this.getSystemCurrentDateTime();
+        est.dataUltimaActualizacao = this.getDataActualizacao();
 
         this.estadoCrudService.updateData(est.id, est).subscribe(
           success => {
@@ -238,7 +243,7 @@ export class CriaralterarComponent implements OnInit {
       "ativo": this.formCriarAlterarEstado?.value.ativo,
 
       "dataCriacao": this.estado.dataCriacao,
-      "dataUltimaActualizacao": this.getSystemCurrentDateTime()
+      "dataUltimaActualizacao": this.getDataActualizacao()
      }
   }
 
