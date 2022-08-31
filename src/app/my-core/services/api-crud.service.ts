@@ -76,20 +76,17 @@ export class ApiCrudService<T> {
 
 
   // Update Data
-  updateData(id: number, record: MEstado): Observable<T> {
+  updateData(id: number, record: T): Observable<T> {
     
-    console.log("Estado CRUD Service||||||||||||||||||||||||||");
-    console.log("ID Recebido: " + id);
+    /*console.log("CRUD Service||||||||||||||||||||||||||");
+    console.log("ID Recebido: " + id);*/
 
-    console.log("Informacao do Estado a Actualizar::::::::::::");
+    /*console.log("Informacao do Estado a Actualizar::::::::::::");
     console.log("VALOR: " + record.valor);
     console.log("DESCRICAO: " + record.descricao);
     console.log("ATIVO: " + record.ativo);
     console.log("DATA CRIACAO: " + record.dataCriacao);
-    console.log("DATA ATUALIZACAO: " + record.dataUltimaActualizacao);
-
-
-    
+    console.log("DATA ATUALIZACAO: " + record.dataUltimaActualizacao);*/   
     
     
     let url = `${this.API_URL}/${id}`;

@@ -4,6 +4,5 @@ export class MEstado {
     descricao!: string;
     ativo!: boolean;
     dataCriacao!: string;
-    dataUltimaActualizacao!: string;     
-
+    dataUltimaActualizacao!: string;
 }

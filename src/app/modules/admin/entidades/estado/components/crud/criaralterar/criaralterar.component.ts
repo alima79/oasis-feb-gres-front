@@ -149,20 +149,7 @@ export class CriaralterarComponent implements OnInit {
      }
   }
 
-  //passado ou presente
-  getDataCriacao(): string {
-    return '2022-08-30T12:10:00'
-  }
-
-  //futoro ou presente
-  getDataActualizacao(): string {
-    return '2022-08-30T23:10:00'
-  }
-
-  resetFields(): void{
-    this.formCriarAlterarEstado.reset();
-    alert('OS CAMPOS FORAM LIMPOS');
-  }
+  
 
   editEstado(): void{
     console.log('EDITANDO ESTADO..........GUARDAR NA BD!!!!!');
@@ -206,11 +193,9 @@ export class CriaralterarComponent implements OnInit {
             this.requestCompleto = true;
           }
         );
-
     } else {
         console.log("NENHUMA ALTERACAO FOI REALIZADA - NAO ACTUALIZAR");
     }  
-
   }
 
   compararEstados(estado: IEstado, novoEstado: IEstado): boolean {
@@ -256,8 +241,24 @@ export class CriaralterarComponent implements OnInit {
 
   disalbleAllControls(): void{
     this.formCriarAlterarEstado.get('valor')?.disable();
+    //this.formCriarAlterarEstado.get('valor')?.reset();
     this.formCriarAlterarEstado.get('descricao')?.disable();
     this.formCriarAlterarEstado.get('ativo')?.disable();
+  }
+
+  //passado ou presente
+  getDataCriacao(): string {
+    return '2022-08-30T12:10:00'
+  }
+
+  //futoro ou presente
+  getDataActualizacao(): string {
+    return '2022-09-30T23:10:00'
+  }
+
+  resetFields(): void{
+    this.formCriarAlterarEstado.reset();
+    alert('OS CAMPOS FORAM LIMPOS');
   }
 
 }

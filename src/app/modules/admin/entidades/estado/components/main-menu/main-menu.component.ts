@@ -23,7 +23,6 @@ export class MainMenuComponent implements OnInit {
                                        width: '60%',
                                        data: {
                                             acao: acaoEstado,
-                                            //id: idEstado,
                                             estado: dados,
                                        }
                       });

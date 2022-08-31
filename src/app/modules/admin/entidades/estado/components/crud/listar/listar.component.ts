@@ -31,7 +31,7 @@ export class ListarComponent implements OnInit {
   
   mypages?: IMyPages;
   totalElements: number =0;
-  sizeInicial: number =3;
+  sizeInicial: number =10;
   sort: string ="valor";
   direccaoOrdem: string ="asc";
   pageSizeOptions: number[] = [1, 2, 5, 10];
@@ -101,26 +101,18 @@ export class ListarComponent implements OnInit {
                                           estado: dados,
                                         }
                       });    
-    dialogRef.afterClosed().subscribe(result => {
-      //console.log(`Dialog result: ${result}`)
-    });
+    dialogRef.afterClosed().subscribe(result => {});
   }
 
   apagarEstado(idE: number): void{
-    //console.log("ABRIR COMPONENTE CRIARALTERAR PARA APAGAR---->");
-    //console.log("Metodo para Apagar um ESTADO");
-    //console.log("ID == " + idE);
     const dialogRef = this.dialog.open(ApagarComponent, {
                                         width: '40%',
                                         height: '40%',
                                         data: {
                                           id: idE
                                         }
-    });    
-    
-    dialogRef.afterClosed().subscribe(result => {
-      //console.log(`Dialog result: ${result}`)
     });
+    dialogRef.afterClosed().subscribe(result => {});
   }
 
 }
