@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { IMenu } from '../../interfaces/i-menu';
 import { CriaralterarComponent } from '../crud/criaralterar/criaralterar.component';
 
 @Component({
@@ -14,12 +15,22 @@ export class MainMenuComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  openDialog() {
+  openDialog(acaoMenu: string) {
+    console.log("Metodo para Criar MENU");
+    let dados!: IMenu;
+    
     const dialogRef = this.dialog.open(CriaralterarComponent, {
-      width: '60%'
-    });
+                                       width: '60%',
+                                       data: {
+                                            acao: acaoMenu,
+                                            menu: dados,
+                                       }
+                      });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`)
 
-    dialogRef.afterClosed().subscribe(result => {});
+    });
   }
 
   navegarParaListarConjunto(){

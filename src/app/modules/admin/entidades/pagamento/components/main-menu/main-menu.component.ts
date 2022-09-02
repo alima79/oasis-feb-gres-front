@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { IPagamento } from '../../interfaces/i-pagamento';
 import { CriaralterarComponent } from '../crud/criaralterar/criaralterar.component';
 
 @Component({
@@ -14,15 +15,26 @@ export class MainMenuComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  openDialog() {
+  openDialog(acaoEstado: string) {
+    console.log("Metodo para Criar PAGAMENTO");
+    let dados!: IPagamento;
+    
     const dialogRef = this.dialog.open(CriaralterarComponent, {
-      width: '60%'
-    });
+                                       width: '60%',
+                                       data: {
+                                            acao: acaoEstado,
+                                            estado: dados,
+                                       }
+                      });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`)
 
-    dialogRef.afterClosed().subscribe(result => {});
+    });
   }
 
-  navegarParaListarConjunto(){
-   this.router.navigate(["./oa-admin/gestao/entidades/pagamento/listar"])
+  navegarParaListarConjunto(): void{
+    console.log("Metodo para Listar PAGAMENTOS");
+    this.router.navigate(["./oa-admin/gestao/entidades/pagamento/listar"])
   }
 }

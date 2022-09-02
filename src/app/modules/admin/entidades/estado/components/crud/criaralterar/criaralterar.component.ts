@@ -42,17 +42,17 @@ export class CriaralterarComponent implements OnInit {
 
   ngOnInit(): void {
       this.acao = this.data.acao;
-      this.estado = this.data.estado;      
+      this.estado = this.data.estado;
       this.preencherFormulario();
   }
 
   preencherFormulario(): void {
     if(this.acao == 'editar' || this.acao == 'ver'){
       this.preencherFormularioUpdate();
-    }    
+    }
     if(this.acao == 'criar'){
       this.preencherFormularioCreate();
-    }    
+    }
   }
 
   //CARREGAR FORM COM DADOS DE OBJECTO
@@ -64,12 +64,12 @@ export class CriaralterarComponent implements OnInit {
     if(this.acao == "ver"){
       this.disalbleAllControls();
     }
-  }  
+  }
 
   updateFormFromOBJ(): void {
     console.log('Update Form From OBJECTO ESTADO.');
     this.incializarFormEstado();
-    
+
     if(this.estado.ativo){
         this.ativarS = true;
     } else{
@@ -114,7 +114,7 @@ export class CriaralterarComponent implements OnInit {
     this.estadoCrudService.createExtraFromIReqEstado(this.criarObjectoEstado()).subscribe(
       success => {
         console.log('CRIADO ESTADO: sucesso: ' + success);
-        
+
         //fechar o dialog pop-up
         this.dialogRef.close();
 
@@ -149,14 +149,14 @@ export class CriaralterarComponent implements OnInit {
      }
   }
 
-  
+
 
   editEstado(): void{
     console.log('EDITANDO ESTADO..........GUARDAR NA BD!!!!!');
-    
-    
+
+
     console.log("**************************** ESTADO Original ----> \n" + this.mostrarEstado(this.estado))
-    
+
     console.log('-------------------------------------------------------------------------------------');
 
     let novoEstado = this.obterDadosForm();
@@ -174,9 +174,9 @@ export class CriaralterarComponent implements OnInit {
 
         this.estadoCrudService.updateData(est.id, est).subscribe(
           success => {
-            console.log('OPERACAO:: EDITAR ESTADO: SUCESSO: \n' + success);          
+            console.log('OPERACAO:: EDITAR ESTADO: SUCESSO: \n' + success);
             //fechar o dialog pop-up
-            this.dialogRef.close();  
+            this.dialogRef.close();
             this.router.navigateByUrl('/', {skipLocationChange: true} ).then(() => {
               this.router.navigate(['/oa-admin/gestao/entidades/estado/listar']);
             });
@@ -195,14 +195,14 @@ export class CriaralterarComponent implements OnInit {
         );
     } else {
         console.log("NENHUMA ALTERACAO FOI REALIZADA - NAO ACTUALIZAR");
-    }  
+    }
   }
 
   compararEstados(estado: IEstado, novoEstado: IEstado): boolean {
-    if(estado.ativo==novoEstado.ativo && 
-       estado.descricao== novoEstado.descricao && 
+    if(estado.ativo==novoEstado.ativo &&
+       estado.descricao== novoEstado.descricao &&
        estado.valor== novoEstado.valor){
-      return true;      
+      return true;
     } else{
       return false;
     }
@@ -232,7 +232,7 @@ export class CriaralterarComponent implements OnInit {
      }
   }
 
-  ativarControlos(): void{    
+  ativarControlos(): void{
     this.acao = "editar";
     this.formCriarAlterarEstado.get('valor')?.enable();
     this.formCriarAlterarEstado.get('descricao')?.enable();

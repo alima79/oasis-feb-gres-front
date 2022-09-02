@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
@@ -7,6 +8,8 @@ import { IMyPages } from 'src/app/my-shared/interfaces-shared/i-my-pages';
 import { IPagamento } from '../../../interfaces/i-pagamento';
 import { IResponsePageablePagamento } from '../../../interfaces/i-response-pageable-pagamento';
 import { PagamentoCrudService } from '../../../services/pagamento-crud.service';
+import { ApagarComponent } from '../apagar/apagar.component';
+import { CriaralterarComponent } from '../criaralterar/criaralterar.component';
 
 @Component({
   selector: 'app-listar',
@@ -60,7 +63,9 @@ export class ListarComponent implements OnInit {
     activo: [true]
   });
 
-  constructor(private formBuilder: FormBuilder, private estadoCrudService: PagamentoCrudService) { }
+  constructor(private formBuilder: FormBuilder, 
+              private pagamentoCrudService: PagamentoCrudService,
+              private dialog : MatDialog) { }
 
   ngOnInit(): void {
     this.readAll();
@@ -92,7 +97,7 @@ export class ListarComponent implements OnInit {
 
     let myObservablePesquisa$: Observable<IResponsePageablePagamento>;
 
-    myObservablePesquisa$ = this.estadoCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
+    myObservablePesquisa$ = this.pagamentoCrudService.findAll(pageIndex, pageSize, this.sort, this.direccaoOrdem);
 
     myObservablePesquisa$.subscribe(
       (data: IResponsePageablePagamento) => {
@@ -108,8 +113,29 @@ export class ListarComponent implements OnInit {
         console.error('ERROR: ', error);
       },
       () => { this.requestCompleto = true; }
-    );
-    
+    );    
+  }
+
+  openDialog(acaoPagamento: string, dados: IPagamento): void{
+    const dialogRef = this.dialog.open(CriaralterarComponent,  {
+                                        width: '60%',
+                                        data: {
+                                          acao: acaoPagamento,
+                                          pagamento: dados,
+                                        }
+                      });    
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+
+  apagarPagamento(idE: number): void{
+    const dialogRef = this.dialog.open(ApagarComponent, {
+                                        width: '40%',
+                                        height: '40%',
+                                        data: {
+                                          id: idE
+                                        }
+    });
+    dialogRef.afterClosed().subscribe(result => {});
   }
 
 }

@@ -4,5 +4,5 @@ export interface IPagamento {
     descricao: string,
     ativo: boolean,
     dataCriacao: string,
-    dataAtualizacao: string
+    dataUltimaActualizacao: string
 }
