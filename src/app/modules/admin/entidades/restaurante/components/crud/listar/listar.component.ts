@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
@@ -7,6 +8,13 @@ import { IMyPages } from 'src/app/my-shared/interfaces-shared/i-my-pages';
 import { IResponsePageableRestaurante } from '../../../interfaces/i-response-pageable-restaurante';
 import { IRestaurante } from '../../../interfaces/i-restaurante';
 import { RestauranteCrudService } from '../../../services/restaurante-crud.service';
+import { ApagarComponent } from '../apagar/apagar.component';
+import { CriaralterarComponent } from '../criaralterar/criaralterar.component';
+
+export interface Parametros {
+  acao: 'criar' | 'ver' | 'editar';
+  restaurante: IRestaurante;
+}
 
 @Component({
   selector: 'app-listar',
@@ -15,8 +23,7 @@ import { RestauranteCrudService } from '../../../services/restaurante-crud.servi
   providers: [
     RestauranteCrudService
   ]
-})
-export class ListarComponent implements OnInit {
+})export class ListarComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'nome','lotacaoMaxima', 'dataCriacao', 'dataUltimaActualizacao', 'ativo', 'acoes'];
   dataSource: IRestaurante[] = [];
@@ -33,7 +40,7 @@ export class ListarComponent implements OnInit {
 
   totalElements: number =0;
   sizeInicial: number =3;
-  sort: string ="id";
+  sort: string ="nome";
   direccaoOrdem: string ="asc";
 
   pageSizeOptions: number[] = [1, 2, 5, 10];
@@ -60,7 +67,9 @@ export class ListarComponent implements OnInit {
     activo: [true]
   });
   
-  constructor(private formBuilder: FormBuilder, private restauranteCrudService: RestauranteCrudService) { }
+  constructor(private formBuilder: FormBuilder, 
+              private restauranteCrudService: RestauranteCrudService,
+              private dialog : MatDialog) { }
 
   ngOnInit(): void {
     this.readAll();
@@ -80,7 +89,7 @@ export class ListarComponent implements OnInit {
      let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
     
     //SORT
-    this.sort = this.sortEvent? this.sortEvent.active : "id";
+    this.sort = this.sortEvent? this.sortEvent.active : "nome";
     this.direccaoOrdem = this.sortEvent? this.sortEvent.direction : "asc";
 
     let myObservablePesquisa$: Observable<IResponsePageableRestaurante>;
@@ -102,6 +111,28 @@ export class ListarComponent implements OnInit {
       () => { this.requestCompleto = true; }
     );
     
+  }
+
+  openDialog(acaoRestaurante: string, dados: IRestaurante): void{
+    const dialogRef = this.dialog.open(CriaralterarComponent,  {
+                                        width: '60%',
+                                        data: {
+                                          acao: acaoRestaurante,
+                                          restaurante: dados,
+                                        }
+                      });    
+    dialogRef.afterClosed().subscribe(result => {});
+  }
+
+  apagarEstado(idE: number): void{
+    const dialogRef = this.dialog.open(ApagarComponent, {
+                                        width: '40%',
+                                        height: '40%',
+                                        data: {
+                                          id: idE
+                                        }
+    });
+    dialogRef.afterClosed().subscribe(result => {});
   }
 
   limparPesquisa() {

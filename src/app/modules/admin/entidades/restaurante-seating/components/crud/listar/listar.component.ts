@@ -38,8 +38,8 @@ export class ListarComponent implements OnInit {
 
 
   totalElements: number =0;
-  sizeInicial: number =3;
-  sort: string ="valor";
+  sizeInicial: number =10;
+  sort: string ="horaInicio";
   direccaoOrdem: string ="asc";
 
   pageSizeOptions: number[] = [1, 2, 5, 10];
@@ -94,7 +94,7 @@ export class ListarComponent implements OnInit {
     let pageSize = this.pageEvent? this.pageEvent.pageSize: this.sizeInicial;
     
     //SORT
-    this.sort = this.sortEvent? this.sortEvent.active : "data";
+    this.sort = this.sortEvent? this.sortEvent.active : "horaInicio";
     this.direccaoOrdem = this.sortEvent? this.sortEvent.direction : "asc";
 
     let myObservablePesquisa$: Observable<IResponsePageableRestauranteSeating>;

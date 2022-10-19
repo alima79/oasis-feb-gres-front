@@ -1,8 +1,8 @@
 export interface IRestaurante {
     id: number;
     nome: string,
-    descricao: string,
+    lotacaoMaxima: number,
     ativo: boolean,
     dataCriacao: string,
-    dataAtualizacao: string
+    dataUltimaActualizacao: string
 }

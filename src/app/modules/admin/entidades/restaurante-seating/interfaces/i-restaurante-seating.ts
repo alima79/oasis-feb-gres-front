@@ -15,7 +15,7 @@ export interface IRestauranteSeating {
     /*Seating related*/ 
     horaInicio: string;
     horaFim: string;
-    completo: string;
+    completo: boolean;
     
 
     _links: {

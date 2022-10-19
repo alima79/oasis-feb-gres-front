@@ -224,12 +224,12 @@ export class CriaralterarComponent implements OnInit {
 
   //passado ou presente
   getDataCriacao(): string {
-    return '2022-08-30T12:10:00'
+    return '2022-10-18T12:10:00'
   }
 
   //futoro ou presente
   getDataActualizacao(): string {
-    return '2022-09-30T23:10:00'
+    return '2022-12-31T23:10:00'
   }
 
   ativarControlos(): void{    

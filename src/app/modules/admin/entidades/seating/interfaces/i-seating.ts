@@ -5,7 +5,5 @@ export interface ISeating {
     completo: boolean,
     ativo: boolean,
     dataCriacao: string,
-    dataAtualizacao: string
-
-
+    dataUltimaActualizacao: string
 }
